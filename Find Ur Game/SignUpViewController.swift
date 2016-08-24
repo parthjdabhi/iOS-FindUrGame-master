@@ -117,15 +117,19 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
                             } else {
                                 print("fetched user: \(result)")
                                 
-                                self.ref.child("users").child(user!.uid).setValue([
-                                    "facebookData": ["userFirstName": result.valueForKey("first_name") as! String!,
-                                        "userLastName": result.valueForKey("last_name") as? String ?? "",
-                                        "gender": result.valueForKey("gender") as? String ?? "",
-                                        "email": result.valueForKey("email") as? String ?? ""],
-                                    "userFirstName": result.valueForKey("first_name") as? String ?? "",
-                                    "userLastName": result.valueForKey("last_name") as? String ?? "",
+                                let fName = result.valueForKey("first_name") as? String ?? ""
+                                let lName = result.valueForKey("last_name") as? String ?? ""
+                                
+                                let data = [ "facebookData": ["userFirstName": fName,
+                                    "userLastName": lName,
+                                    "gender": result.valueForKey("gender") as? String ?? "",
+                                    "email": result.valueForKey("email") as? String ?? ""],
+                                    "userFirstName": fName,
+                                    "userLastName": lName,
                                     "email": result.valueForKey("email") as? String ?? "",
-                                    "name": "\((result.valueForKey("first_name") as? String ?? "") (result.valueForKey("last_name") as? String ?? ""))" ])
+                                    "name": "\(fName) \(fName)" ]
+                                
+                                self.ref.child("users").child(user!.uid).setValue(data)
                                 
                                 if let picture = result.objectForKey("picture") {
                                     if let pictureData = picture.objectForKey("data"){
@@ -152,6 +156,9 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
             CommonUtils.sharedUtils.showProgress(self.view, label: "Registering...")
             FIRAuth.auth()?.createUserWithEmail(email, password: password, completion:  { (user, error) in
                 if error == nil {
+                    let fName = self.firstNameField.text ?? ""
+                    let lName = self.lastNameField.text ?? ""
+                    
                     FIREmailPasswordAuthProvider.credentialWithEmail(email, password: password)
                     self.ref.child("users").child(user!.uid).setValue(["userFirstName": self.firstNameField.text!,
                         "userLastName": self.lastNameField.text!,
@@ -159,7 +166,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
                         "userPhoneNumber": self.phoneField.text!,
                         "userDOB": self.dobField.text!,
                         "userHeight": self.heightField.text!,
-                        "name": "\((self.firstNameField.text as? String ?? "") (self.lastNameField.text as? String ?? ""))"])
+                        "name": "\(fName) \(fName)"])
                     CommonUtils.sharedUtils.hideProgress()
                     let photoViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoViewController") as! PhotoViewController!
                     self.navigationController?.pushViewController(photoViewController, animated: true)
