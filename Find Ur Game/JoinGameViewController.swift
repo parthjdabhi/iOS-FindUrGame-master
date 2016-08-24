@@ -23,18 +23,33 @@ class JoinGameViewController: UIViewController {
     
     @IBOutlet var lblDetailDesc: UILabel!
     @IBOutlet var tblUsers: UITableView!
+    @IBOutlet var btnJoin: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        btnJoin.hidden = true
+        
         ref = FIRDatabase.database().reference()
-        ref.child("players").child(filteredPlaces[activePlace]["key"] ?? "").observeEventType(.Value, withBlock: { (snapshot) in
-            if let  players = snapshot.valueInExportFormat() as? NSDictionary {
-                for (key,value) in players.enumerate() {
-                    self.users.append(["key":"\(key)","name":"\(value)"])
+        ref.child("players").child(filteredPlaces[activePlace]["key"] ?? "").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            var isJoined = false
+            for child in snapshot.children {
+                var userDict = Dictionary<String,String>()
+                let childDict = child.valueInExportFormat() as! NSDictionary
+                for key : AnyObject in childDict.allKeys {
+                    let stringKey = key as! String
+                    if let keyValue = childDict.valueForKey(stringKey) as? String {
+                        userDict[stringKey] = keyValue
+                        if keyValue == FIRAuth.auth()!.currentUser!.uid {
+                            isJoined = true
+                        }
+                    }
                 }
+                print(userDict)
+                self.users.append(userDict)
             }
-            print(self.users)
+            self.btnJoin.hidden = isJoined
+            self.tblUsers.reloadData()
         })
         
         var descString = ""
@@ -60,8 +75,16 @@ class JoinGameViewController: UIViewController {
     
     @IBAction func joinGameButton(sender: AnyObject) {
         
+        CommonUtils.sharedUtils.showProgress(self.view, label: "Joining..")
         let enroll:[String:AnyObject] = ["uid":(FIRAuth.auth()?.currentUser?.uid ?? ""), "name" : "\((FIRAuth.auth()?.currentUser?.displayName ?? "My Name"))"];
-        ref.child("players").child(filteredPlaces[activePlace]["key"] ?? "").child(FIRAuth.auth()?.currentUser?.uid ?? "").setValue(enroll)
+        ref.child("players").child(filteredPlaces[activePlace]["key"] ?? "").child(FIRAuth.auth()?.currentUser?.uid ?? "").setValue(enroll) { (error, ref) in
+            CommonUtils.sharedUtils.hideProgress()
+            if error == nil {
+                self.navigationController?.popViewControllerAnimated(true)
+            } else {
+                CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "opps,Failed to join!")
+            }
+        }
         
         func signedIn(user: FIRUser?) {
             let mainScreenViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MainScreenViewController") as! MainScreenViewController!
@@ -79,7 +102,7 @@ class JoinGameViewController: UIViewController {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        if filteredPlaces.count == 0 {
+        if users.count == 0 {
             let emptyLabel = UILabel(frame: tableView.frame)
             emptyLabel.text = "Are you want to join this game?"
             emptyLabel.textColor = UIColor.lightGrayColor();
@@ -91,7 +114,7 @@ class JoinGameViewController: UIViewController {
             return 0
         } else {
             tableView.backgroundView = nil
-            return filteredPlaces.count
+            return users.count
         }
     }
     
@@ -99,7 +122,19 @@ class JoinGameViewController: UIViewController {
     {
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "Cell") 
         
-        cell.textLabel?.text = "test"
+        cell.textLabel?.text = users[indexPath.row]["name"] ?? ""
+        
+        let uid = users[indexPath.row]["uid"] ?? ""
+        
+        ref.child("users").child(uid).observeSingleEventOfType(.Value) { (snapshot:FIRDataSnapshot) in
+            if snapshot.exists() {
+                if let data = snapshot.valueInExportFormat() as? NSDictionary {
+                    let fname:String = data["userFirstName"] as? String ?? ""
+                    let lname:String = data["userLastName"] as? String ?? ""
+                    cell.textLabel?.text = "\(fname) \(lname)"
+                }
+            }
+        }
         
         return cell
     }

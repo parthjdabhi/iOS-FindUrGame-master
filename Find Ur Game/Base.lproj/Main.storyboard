@@ -1450,6 +1450,7 @@
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="btnJoin" destination="DpB-B0-hjv" id="FRb-yO-zgT"/>
                         <outlet property="lblDetailDesc" destination="qjy-kQ-khc" id="3vM-hm-9te"/>
                         <outlet property="tblUsers" destination="Zcn-BR-io2" id="qoh-oy-Mb4"/>
                     </connections>
