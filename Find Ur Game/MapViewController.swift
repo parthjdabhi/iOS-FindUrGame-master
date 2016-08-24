@@ -47,7 +47,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             
         } else {
             
-            for (index, element) in places.enumerate()
+            for (index, element) in filteredPlaces.enumerate()
             {
                 //print("Item \(index): \(element)")
                 let latitude = NSString(string: element["lat"]!).doubleValue
@@ -65,14 +65,14 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 
 //                let annotation1 = Annotation()
 //                annotation1.coordinate = coordinate
-//                //annotation1.title = places[activePlace]["title"]
+//                //annotation1.title = filteredPlaces[activePlace]["title"]
 //                annotation1.pinColor = (index == activePlace) ? UIColor.greenColor() : UIColor.redColor()
 //                print((index == activePlace))
 //                self.map.addAnnotation(annotation1)
             }
             
-            let latitude = NSString(string: places[activePlace]["lat"]!).doubleValue
-            let longitude = NSString(string: places[activePlace]["long"]!).doubleValue
+            let latitude = NSString(string: filteredPlaces[activePlace]["lat"]!).doubleValue
+            let longitude = NSString(string: filteredPlaces[activePlace]["long"]!).doubleValue
             let coordinate = CLLocationCoordinate2DMake(latitude, longitude)
             let latDelta:CLLocationDegrees = 0.05
             let lonDelta:CLLocationDegrees = 0.05
@@ -122,8 +122,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     title = "Added \(NSDate())"
                 }
                 
-                places.append(["name":title,"lat":"\(newCoordinate.latitude)","lon":"\(newCoordinate.longitude)"])
-                print(places)
+                filteredPlaces.append(["name":title,"lat":"\(newCoordinate.latitude)","lon":"\(newCoordinate.longitude)"])
+                print(filteredPlaces)
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = newCoordinate
                 annotation.title = title

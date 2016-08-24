@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		074653A89B58EFF43D9D45D5 /* Pods_Find_Ur_Game.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D856C18CEE5C34D32A6970B7 /* Pods_Find_Ur_Game.framework */; };
+		5E9A86291D6DD553004B50C1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E9A86271D6DD553004B50C1 /* Main.storyboard */; };
+		5EBEE2921D6D8404005FDB2C /* SelectLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBEE2911D6D8404005FDB2C /* SelectLocationViewController.swift */; };
+		5EBEE2941D6DA6E5005FDB2C /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EBEE2931D6DA6E5005FDB2C /* Storyboard.storyboard */; };
 		5EC062341D6C20810063AA5E /* GameTableviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC062331D6C20810063AA5E /* GameTableviewCell.swift */; };
 		DA00F7F21D6983AB009BE915 /* SharedCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA00F7F11D6983AB009BE915 /* SharedCode.swift */; };
 		DA00F7FC1D6BABB1009BE915 /* JoinGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA00F7FB1D6BABB1009BE915 /* JoinGameViewController.swift */; };
@@ -17,7 +20,6 @@
 		DA06AF731D5BD0A000EE91D4 /* MapOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA06AF721D5BD0A000EE91D4 /* MapOptionViewController.swift */; };
 		DA8B4B8D1D57D73300F56470 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B4B8C1D57D73300F56470 /* AppDelegate.swift */; };
 		DA8B4B8F1D57D73300F56470 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B4B8E1D57D73300F56470 /* ViewController.swift */; };
-		DA8B4B921D57D73300F56470 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA8B4B901D57D73300F56470 /* Main.storyboard */; };
 		DA8B4B951D57D73300F56470 /* Find_Ur_Game.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DA8B4B931D57D73300F56470 /* Find_Ur_Game.xcdatamodeld */; };
 		DA8B4B971D57D73300F56470 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA8B4B961D57D73300F56470 /* Assets.xcassets */; };
 		DA8B4B9A1D57D73300F56470 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA8B4B981D57D73300F56470 /* LaunchScreen.storyboard */; };
@@ -65,6 +67,9 @@
 
 /* Begin PBXFileReference section */
 		3E5744C6D2F31946FC108F9A /* Pods-Find Ur Game.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Find Ur Game.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Find Ur Game/Pods-Find Ur Game.debug.xcconfig"; sourceTree = "<group>"; };
+		5E9A86281D6DD553004B50C1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5EBEE2911D6D8404005FDB2C /* SelectLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectLocationViewController.swift; sourceTree = "<group>"; };
+		5EBEE2931D6DA6E5005FDB2C /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		5EC0622E1D6C05F30063AA5E /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Bridging-Header.h"; path = "Find Ur Game/Bridging-Header.h"; sourceTree = "<group>"; };
 		5EC062331D6C20810063AA5E /* GameTableviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameTableviewCell.swift; sourceTree = "<group>"; };
 		A8CBAF6BAA1BF1C226BDFC5B /* Pods-Find Ur Game.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Find Ur Game.release.xcconfig"; path = "Pods/Target Support Files/Pods-Find Ur Game/Pods-Find Ur Game.release.xcconfig"; sourceTree = "<group>"; };
@@ -78,7 +83,6 @@
 		DA8B4B891D57D73300F56470 /* Find Ur Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Find Ur Game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA8B4B8C1D57D73300F56470 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DA8B4B8E1D57D73300F56470 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		DA8B4B911D57D73300F56470 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DA8B4B941D57D73300F56470 /* Find_Ur_Game.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Find_Ur_Game.xcdatamodel; sourceTree = "<group>"; };
 		DA8B4B961D57D73300F56470 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DA8B4B991D57D73300F56470 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -159,6 +163,7 @@
 				5EC062331D6C20810063AA5E /* GameTableviewCell.swift */,
 				DA06AF6C1D5BCB6900EE91D4 /* MapViewController.swift */,
 				DA8BEC1D1D6798D800C8E142 /* CreateGameViewController.swift */,
+				5EBEE2911D6D8404005FDB2C /* SelectLocationViewController.swift */,
 				DA8BEC1F1D67991300C8E142 /* GameScheduleViewController.swift */,
 				DA8BEC211D67993800C8E142 /* ProfileViewController.swift */,
 			);
@@ -195,13 +200,14 @@
 				DA8B4B8E1D57D73300F56470 /* ViewController.swift */,
 				5EC0622F1D6C1C9D0063AA5E /* Signin - Signup */,
 				5EC062301D6C1CBB0063AA5E /* Main screens */,
-				DA8B4B901D57D73300F56470 /* Main.storyboard */,
+				5E9A86271D6DD553004B50C1 /* Main.storyboard */,
 				DA8B4B981D57D73300F56470 /* LaunchScreen.storyboard */,
 				DA8B4B931D57D73300F56470 /* Find_Ur_Game.xcdatamodeld */,
 				DA8B4BC11D57DC1700F56470 /* GoogleService-Info.plist */,
 				DA8B4B9B1D57D73300F56470 /* Info.plist */,
 				DA8B4BE51D57DE0C00F56470 /* Helper & Utilities */,
 				DA8B4BBF1D57DBF800F56470 /* Pictures */,
+				5EBEE2931D6DA6E5005FDB2C /* Storyboard.storyboard */,
 			);
 			path = "Find Ur Game";
 			sourceTree = "<group>";
@@ -388,14 +394,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA8B4BCC1D57DC5900F56470 /* Login Button.png in Resources */,
+				5E9A86291D6DD553004B50C1 /* Main.storyboard in Resources */,
 				DA8B4B9A1D57D73300F56470 /* LaunchScreen.storyboard in Resources */,
 				DA8B4BC71D57DC4500F56470 /* Forgot Password.png in Resources */,
 				DA8B4BC21D57DC1700F56470 /* GoogleService-Info.plist in Resources */,
 				DA8B4B971D57D73300F56470 /* Assets.xcassets in Resources */,
-				DA8B4B921D57D73300F56470 /* Main.storyboard in Resources */,
 				DA8B4BC81D57DC4500F56470 /* Grey Box.png in Resources */,
 				DA8B4BCA1D57DC4500F56470 /* SignUp Button.png in Resources */,
 				DA8B4BC91D57DC4500F56470 /* facebook button.png in Resources */,
+				5EBEE2941D6DA6E5005FDB2C /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,6 +490,7 @@
 				DA06AF731D5BD0A000EE91D4 /* MapOptionViewController.swift in Sources */,
 				DA8BEC201D67991300C8E142 /* GameScheduleViewController.swift in Sources */,
 				DA8B4BE41D57DE0200F56470 /* MainScreenViewController.swift in Sources */,
+				5EBEE2921D6D8404005FDB2C /* SelectLocationViewController.swift in Sources */,
 				DA8B4BE01D57DD6F00F56470 /* MBProgressHUD.m in Sources */,
 				DA00F7FC1D6BABB1009BE915 /* JoinGameViewController.swift in Sources */,
 				DA00F7F21D6983AB009BE915 /* SharedCode.swift in Sources */,
@@ -528,10 +536,10 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		DA8B4B901D57D73300F56470 /* Main.storyboard */ = {
+		5E9A86271D6DD553004B50C1 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				DA8B4B911D57D73300F56470 /* Base */,
+				5E9A86281D6DD553004B50C1 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";

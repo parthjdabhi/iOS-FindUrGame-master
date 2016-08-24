@@ -6,83 +6,103 @@
 	<dict>
 		<key>AFNetworking.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>2</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>ActionSheetPicker-3.0.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>1</integer>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Alamofire.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>AlamofireSwiftyJSON.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Bolts.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>3</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>FBSDKCoreKit.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>4</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>FBSDKLoginKit.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>5</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>FBSDKShareKit.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>6</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>GTMOAuth2.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>7</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>GTMSessionFetcher.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>8</integer>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>IQDropDownTextField.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>IQKeyboardManagerSwift.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>10</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>InstagramKit.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>9</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Mixpanel.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>11</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>OAuthSwift.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>12</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Pods-Find Ur Game.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>13</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>SDWebImage.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>14</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>SlideMenuControllerSwift.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>15</integer>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>SwiftyJSON.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>UICKeyChainStore.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>16</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -112,12 +132,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>3511258FF1DED3401C4B456024D5FA41</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>45935B91DF0442390E2CA6DEEF68AE99</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>55E7EE72F484259A2996B546596DBBE6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6512F345F488CFA287F911143753340B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -132,12 +162,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8EFE724FDDAA2478F44F082C05BA272C</key>
+		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9692D26733D42B06E5FBDDBA95CB5F54</key>
+		<key>8EFE724FDDAA2478F44F082C05BA272C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -147,7 +177,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A69887CA6393374EB0C31D0949F87E91</key>
+		<key>A310B7A0321CD3DFA41B5C6D67B511CC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B73C8140915D30861C72F02B0F50A433</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B8A55784801404DA0A51E1829BBB0F54</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -162,7 +202,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D6F24DF7BD77710A9470AD1BA90D2A26</key>
+		<key>ED547C8F8241C5F0D23012ACCA6B5643</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -28,79 +28,21 @@ class JoinGameViewController: UIViewController {
         super.viewDidLoad()
         
         ref = FIRDatabase.database().reference()
-//        ref.child("games").child("active").observeEventType(.Value, withBlock: { (snapshot) in
-//            for child in snapshot.children {
-//                let group = child.childSnapshotForPath("groupName").value
-//                let groupString = group as! String!
-//                print(groupString)
-//                let gameNotes = child.childSnapshotForPath("gameNotes").value
-//                let gameNotesString = gameNotes as! String!
-//                print(gameNotesString)
-//                let lat = child.childSnapshotForPath("lat").value
-//                let userLat = lat as! Double!
-//                print(userLat)
-//                let long = child.childSnapshotForPath("long").value
-//                let userLong = long as! Double!
-//                print(userLong)
-//                let sport = child.childSnapshotForPath("sport").value
-//                let sportGame = sport as! String!
-//                print(sportGame)
-//                let skill = child.childSnapshotForPath("skillLevel").value
-//                let skillLevel = skill as! String!
-//                print(skillLevel)
-//                let gameCreator = child.childSnapshotForPath("gameCreator").value
-//                let gameCreatorString = gameCreator as! String!
-//                print(gameCreatorString)
-//                let timestamp = child.childSnapshotForPath("timestamp").value
-//                let timestampString = timestamp as! Double!
-//                print(timestampString)
-//                
-//                let geoCoder = CLGeocoder()
-//                let location = CLLocation(latitude: userLat, longitude: userLong)
-//                geoCoder.reverseGeocodeLocation(location)
-//                {
-//                    (placemarks, error) -> Void in
-//                    let placeArray = placemarks as [CLPlacemark]!
-//                    
-//                    // Place details
-//                    var placeMark: CLPlacemark!
-//                    placeMark = placeArray?[0]
-//                    
-//                    // Address dictionary
-//                    print(placeMark.addressDictionary)
-//                    
-//                    // Location name
-//                    let locationName = placeMark.addressDictionary?["Name"] as! String!
-//                    print(locationName)
-//                    
-//                    // Street address
-//                    let street = placeMark.addressDictionary?["Thoroughfare"] as! String!
-//                    
-//                    // City
-//                    let city = placeMark.addressDictionary?["City"] as! String!
-//                    
-//                    // Zip code
-//                    let zip = placeMark.addressDictionary?["ZIP"] as! String!
-//                    
-//                    // Country
-//                    let country = placeMark.addressDictionary?["Country"] as! String!
-//                    print(country)
-//                    
-//                    let currentGame = places
-//                    
-//        /*
-//        if places.count >= 1 {
-//            places.removeAtIndex(0)
-//            places.append(["name":"\(groupString) -- \(street), \(city) \(zip)","lat":"\(userLat)","lon":"\(userLong)"])
-//        }*/}
-//        }
-//    })
+        ref.child("players").child(filteredPlaces[activePlace]["key"] ?? "").observeEventType(.Value, withBlock: { (snapshot) in
+            if let  players = snapshot.valueInExportFormat() as? NSDictionary {
+                for (key,value) in players.enumerate() {
+                    self.users.append(["key":"\(key)","name":"\(value)"])
+                }
+            }
+            print(self.users)
+        })
+        
         var descString = ""
-        if let groupName = places[activePlace]["groupName"] {
+        if let groupName = filteredPlaces[activePlace]["groupName"] {
             descString += "Name of Game: \(groupName) \n\n"
         }
         
-        if let gameNotes = places[activePlace]["gameNotes"] {
+        if let gameNotes = filteredPlaces[activePlace]["gameNotes"] {
             descString += "Game Notes: \(gameNotes) \n"
         }
 
@@ -118,9 +60,47 @@ class JoinGameViewController: UIViewController {
     
     @IBAction func joinGameButton(sender: AnyObject) {
         
+        let enroll:[String:AnyObject] = ["uid":(FIRAuth.auth()?.currentUser?.uid ?? ""), "name" : "\((FIRAuth.auth()?.currentUser?.displayName ?? "My Name"))"];
+        ref.child("players").child(filteredPlaces[activePlace]["key"] ?? "").child(FIRAuth.auth()?.currentUser?.uid ?? "").setValue(enroll)
+        
         func signedIn(user: FIRUser?) {
             let mainScreenViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MainScreenViewController") as! MainScreenViewController!
             self.navigationController?.pushViewController(mainScreenViewController, animated: true)
         }
+    }
+    
+    // MARK: - Table view data source
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        // #warning Potentially incomplete method implementation.
+        // Return the number of sections.
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete method implementation.
+        // Return the number of rows in the section.
+        if filteredPlaces.count == 0 {
+            let emptyLabel = UILabel(frame: tableView.frame)
+            emptyLabel.text = "Are you want to join this game?"
+            emptyLabel.textColor = UIColor.lightGrayColor();
+            emptyLabel.textAlignment = .Center;
+            emptyLabel.numberOfLines = 3
+            
+            tableView.backgroundView = emptyLabel
+            tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+            return 0
+        } else {
+            tableView.backgroundView = nil
+            return filteredPlaces.count
+        }
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "Cell") 
+        
+        cell.textLabel?.text = "test"
+        
+        return cell
     }
 }

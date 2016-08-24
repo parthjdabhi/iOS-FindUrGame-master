@@ -11,22 +11,38 @@ import Firebase
 import CoreLocation
 
 var places:[Dictionary<String,String>] = []
+var filteredPlaces:[Dictionary<String,String>] = []
 var activePlace = -1
 
-class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     
     var user: FIRUser!
     var ref:FIRDatabaseReference!
     var gameNameString = ""
-
+    var filterWithKm = 5
+    
+    var locationManager: CLLocationManager!
+    var currentLocation: CLLocation?
+    
     @IBOutlet var tblGroups: UITableView!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initLocationManager()
+        refreshData()
+    }
+    override func viewWillAppear(animated: Bool) {
+        tblGroups.reloadData()
+        //refreshData()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        refreshData()
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "newPlace" {
+            activePlace = -1
+        }
     }
     
     func refreshData()
@@ -49,7 +65,10 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     let stringKey = key as! String
                     if let keyValue = childDict.valueForKey(stringKey) as? String {
                         placeDict[stringKey] = keyValue
+                    } else if let keyValue = childDict.valueForKey(stringKey) as? Double {
+                        placeDict[stringKey] = "\(keyValue)"
                     }
+                    
                 }
                 placeDict["key"] = child.key
                 
@@ -112,8 +131,8 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     
                     //places.removeAtIndex(0)
                     placeDict["title"] = "\(groupString) -- \(street), \(city) \(zip)"
-                    placeDict["lat"] = "\(userLat)"
-                    placeDict["long"] = "\(userLong)"
+                    //placeDict["lat"] = "\(userLat)"
+                    //placeDict["long"] = "\(userLong)"
                     places.append(placeDict)
                     
                     print(placeDict)
@@ -127,6 +146,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
             dispatch_async(dispatch_get_main_queue()) {
                 // update UI
                 CommonUtils.sharedUtils.hideProgress()
+                self.filterData()
                 self.tblGroups.reloadData()
                 print(places)
             }
@@ -137,9 +157,98 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func filterData()
+    {
+        //Can Filter data
+        if filterWithKm == 0 || currentLocation == nil {
+            filteredPlaces = places
+        } else {
+            
+            //Filter data with limit
+            filteredPlaces = places.filter({ (game:[String : String]) -> Bool in
+                if let lat = (game["lat"])?.toDouble(),
+                    long = (game["long"])?.toDouble()
+                {
+                    let loc1 = CLLocation(latitude: lat, longitude: long)
+                    let distanceInMeters = currentLocation?.distanceFromLocation(loc1) ?? 0
+                    print("distanceInMeters : \(distanceInMeters)")
+                    //print(Int(distanceInMeters) < (1000 * Int(filterWithKm)))
+                    return (Int(distanceInMeters) < (1000 * Int(filterWithKm)))
+                }
+                return false
+            })
+        }
+        
+        //Sort Data
+        if currentLocation != nil && places.count > 0 {
+            filteredPlaces = filteredPlaces.sort({ (game1:[String : String], game2:[String : String]) -> Bool in
+                    if let lat1 = (game1["lat"])?.toDouble(),
+                        long1 = (game1["long"])?.toDouble(),
+                        lat2 = (game2["lat"])?.toDouble(),
+                        long2 = (game2["long"])?.toDouble()
+                    {
+                        let loc1 = CLLocation(latitude: lat1, longitude: long1)
+                        let loc2 = CLLocation(latitude: lat2, longitude: long2)
+                        let distanceInMeters1 = currentLocation?.distanceFromLocation(loc1) ?? 0
+                        let distanceInMeters2 = currentLocation?.distanceFromLocation(loc2) ?? 0
+                        //print((distanceInMeters1 < distanceInMeters2))
+                        return (distanceInMeters1 < distanceInMeters2)
+                    }
+                    return false
+                })
+        }
+    }
 
+    @IBAction func indexChanged(sender: UISegmentedControl) {
+        switch segmentedControl.selectedSegmentIndex
+        {
+        case 0:
+            filterWithKm = 5
+            break
+        case 1:
+            filterWithKm = 10
+            break
+        case 2:
+            filterWithKm = 15
+            break
+        case 3:
+            filterWithKm = 0
+            break
+        default:
+            filterWithKm = 0
+            break;
+        }
+        self.filterData()
+        tblGroups.reloadData()
+    }
+    
+    // MARK: - Location
+    func initLocationManager() {
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
+        locationManager.requestWhenInUseAuthorization()
+    }
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError)
+    {
+        locationManager.stopUpdatingLocation()
+        print("\(error)")
+    }
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+    {
+        if self.currentLocation == nil
+        {
+            let location = locations.last! as CLLocation
+            currentLocation = location
+            CLocation = location
+        }
+        locationManager.stopUpdatingLocation()
+    }
+    
     // MARK: - Table view data source
-
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
@@ -149,14 +258,29 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return places.count
+        if filteredPlaces.count == 0 {
+            let emptyLabel = UILabel(frame: tableView.frame)
+            emptyLabel.text = "Currently you do not have any nearby games!"
+            emptyLabel.textColor = UIColor.lightGrayColor();
+            emptyLabel.textAlignment = .Center;
+            emptyLabel.numberOfLines = 3
+            
+            tableView.backgroundView = emptyLabel
+            tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+            return 0
+        } else {
+            tableView.backgroundView = nil
+            return filteredPlaces.count
+        }
     }
+    
+    
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCellWithIdentifier("GameTableviewCell", forIndexPath: indexPath) as! GameTableviewCell
         
-        cell.lblTitle.text =  places[indexPath.row]["title"]
+        cell.lblTitle.text =  filteredPlaces[indexPath.row]["title"]
         
         cell.btnJoin.tag = indexPath.row
         cell.btnJoin.addTarget(self, action: #selector(TableViewController.joinGameButton(_:)), forControlEvents: .TouchUpInside)
@@ -168,17 +292,6 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         activePlace = indexPath.row
         return indexPath
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
-        if segue.identifier == "newPlace" {
-            activePlace = -1
-        }
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        tblGroups.reloadData()
     }
     
     @IBAction func joinGameButton(sender: UIButton) {
@@ -194,4 +307,10 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         self.navigationController?.popViewControllerAnimated(true)
     }
     
+}
+
+extension String {
+    func toDouble() -> Double? {
+        return NSNumberFormatter().numberFromString(self)?.doubleValue
+    }
 }

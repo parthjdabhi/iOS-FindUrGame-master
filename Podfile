@@ -24,7 +24,12 @@ pod 'OAuthSwift', '~> 0.5.0'
 pod 'SDWebImage', '~>3.8'
 pod 'ActionSheetPicker-3.0', '~> 2.2.0'
 pod 'SlideMenuControllerSwift'
+
 pod 'IQKeyboardManagerSwift'
+pod 'IQDropDownTextField', '~> 1.0'
 # Pods for What2Watch
+
+pod 'Alamofire', '~> 3.4'
+pod 'AlamofireSwiftyJSON', '~> 0.1'
 
 end

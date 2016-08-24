@@ -7,7 +7,9 @@
 //
 
 import Foundation
+import UIKit
 import Firebase
+import CoreLocation
 
 class AppState: NSObject {
     
@@ -20,3 +22,7 @@ class AppState: NSObject {
     //var friendID: String?
     //var friend: UserData?
 }
+
+//Global Data
+var CLocation:CLLocation = CLLocation()
+var CLocationPlace:String = String()
