@@ -16,11 +16,13 @@ class JoinGameViewController: UIViewController {
     static var gameTime = Double.self
     static var currentGame = ""
     static var gameID = ""
+    var users:[Dictionary<String,String>] = []
     
     var user: FIRUser!
     var ref:FIRDatabaseReference!
     
     @IBOutlet var lblDetailDesc: UILabel!
+    @IBOutlet var tblUsers: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
