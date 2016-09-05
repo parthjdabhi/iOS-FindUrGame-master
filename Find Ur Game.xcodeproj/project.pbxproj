@@ -12,6 +12,10 @@
 		5EBEE2921D6D8404005FDB2C /* SelectLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBEE2911D6D8404005FDB2C /* SelectLocationViewController.swift */; };
 		5EBEE2941D6DA6E5005FDB2C /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EBEE2931D6DA6E5005FDB2C /* Storyboard.storyboard */; };
 		5EC062341D6C20810063AA5E /* GameTableviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC062331D6C20810063AA5E /* GameTableviewCell.swift */; };
+		5EED819E1D7DA0930000EAD9 /* CreateNewGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EED819D1D7DA0930000EAD9 /* CreateNewGameViewController.swift */; };
+		5EED81A01D7DA0B40000EAD9 /* FinadGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EED819F1D7DA0B40000EAD9 /* FinadGameViewController.swift */; };
+		5EED81A21D7DA0D20000EAD9 /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EED81A11D7DA0D20000EAD9 /* MyProfileViewController.swift */; };
+		5EED81A51D7DE7830000EAD9 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EED81A41D7DE7830000EAD9 /* Media.xcassets */; };
 		DA00F7F21D6983AB009BE915 /* SharedCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA00F7F11D6983AB009BE915 /* SharedCode.swift */; };
 		DA00F7FC1D6BABB1009BE915 /* JoinGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA00F7FB1D6BABB1009BE915 /* JoinGameViewController.swift */; };
 		DA00F7FE1D6CCACD009BE915 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA00F7FD1D6CCACD009BE915 /* SignUpViewController.swift */; };
@@ -72,6 +76,10 @@
 		5EBEE2931D6DA6E5005FDB2C /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		5EC0622E1D6C05F30063AA5E /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Bridging-Header.h"; path = "Find Ur Game/Bridging-Header.h"; sourceTree = "<group>"; };
 		5EC062331D6C20810063AA5E /* GameTableviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameTableviewCell.swift; sourceTree = "<group>"; };
+		5EED819D1D7DA0930000EAD9 /* CreateNewGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewGameViewController.swift; sourceTree = "<group>"; };
+		5EED819F1D7DA0B40000EAD9 /* FinadGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinadGameViewController.swift; sourceTree = "<group>"; };
+		5EED81A11D7DA0D20000EAD9 /* MyProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
+		5EED81A41D7DE7830000EAD9 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		A8CBAF6BAA1BF1C226BDFC5B /* Pods-Find Ur Game.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Find Ur Game.release.xcconfig"; path = "Pods/Target Support Files/Pods-Find Ur Game/Pods-Find Ur Game.release.xcconfig"; sourceTree = "<group>"; };
 		D856C18CEE5C34D32A6970B7 /* Pods_Find_Ur_Game.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Find_Ur_Game.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA00F7F11D6983AB009BE915 /* SharedCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedCode.swift; sourceTree = "<group>"; };
@@ -166,13 +174,25 @@
 				5EBEE2911D6D8404005FDB2C /* SelectLocationViewController.swift */,
 				DA8BEC1F1D67991300C8E142 /* GameScheduleViewController.swift */,
 				DA8BEC211D67993800C8E142 /* ProfileViewController.swift */,
+				5EED81A31D7DA0D70000EAD9 /* Tab Bar VCs */,
 			);
 			name = "Main screens";
+			sourceTree = "<group>";
+		};
+		5EED81A31D7DA0D70000EAD9 /* Tab Bar VCs */ = {
+			isa = PBXGroup;
+			children = (
+				5EED819D1D7DA0930000EAD9 /* CreateNewGameViewController.swift */,
+				5EED819F1D7DA0B40000EAD9 /* FinadGameViewController.swift */,
+				5EED81A11D7DA0D20000EAD9 /* MyProfileViewController.swift */,
+			);
+			name = "Tab Bar VCs";
 			sourceTree = "<group>";
 		};
 		DA8B4B801D57D73300F56470 = {
 			isa = PBXGroup;
 			children = (
+				5EED81A41D7DE7830000EAD9 /* Media.xcassets */,
 				5EC0622E1D6C05F30063AA5E /* Bridging-Header.h */,
 				DA8B4B8B1D57D73300F56470 /* Find Ur Game */,
 				DA8B4BA31D57D73400F56470 /* Find Ur GameTests */,
@@ -398,6 +418,7 @@
 				DA8B4B9A1D57D73300F56470 /* LaunchScreen.storyboard in Resources */,
 				DA8B4BC71D57DC4500F56470 /* Forgot Password.png in Resources */,
 				DA8B4BC21D57DC1700F56470 /* GoogleService-Info.plist in Resources */,
+				5EED81A51D7DE7830000EAD9 /* Media.xcassets in Resources */,
 				DA8B4B971D57D73300F56470 /* Assets.xcassets in Resources */,
 				DA8B4BC81D57DC4500F56470 /* Grey Box.png in Resources */,
 				DA8B4BCA1D57DC4500F56470 /* SignUp Button.png in Resources */,
@@ -480,6 +501,7 @@
 				DA8B4BDB1D57DD6300F56470 /* TextField.swift in Sources */,
 				DA8B4BD51D57DD6300F56470 /* UIViewExtensions.swift in Sources */,
 				DA00F7FE1D6CCACD009BE915 /* SignUpViewController.swift in Sources */,
+				5EED819E1D7DA0930000EAD9 /* CreateNewGameViewController.swift in Sources */,
 				DA8B4BBE1D57DADB00F56470 /* FirebaseSignInViewController.swift in Sources */,
 				DA8B4BD91D57DD6300F56470 /* AppState.swift in Sources */,
 				DA8BEC221D67993800C8E142 /* ProfileViewController.swift in Sources */,
@@ -489,6 +511,7 @@
 				DA8B4BD71D57DD6300F56470 /* Constants.swift in Sources */,
 				DA06AF731D5BD0A000EE91D4 /* MapOptionViewController.swift in Sources */,
 				DA8BEC201D67991300C8E142 /* GameScheduleViewController.swift in Sources */,
+				5EED81A21D7DA0D20000EAD9 /* MyProfileViewController.swift in Sources */,
 				DA8B4BE41D57DE0200F56470 /* MainScreenViewController.swift in Sources */,
 				5EBEE2921D6D8404005FDB2C /* SelectLocationViewController.swift in Sources */,
 				DA8B4BE01D57DD6F00F56470 /* MBProgressHUD.m in Sources */,
@@ -497,6 +520,7 @@
 				DA8BEC1E1D6798D800C8E142 /* CreateGameViewController.swift in Sources */,
 				DA8B4B951D57D73300F56470 /* Find_Ur_Game.xcdatamodeld in Sources */,
 				DA8B4BE91D57DEB700F56470 /* PhotoViewController.swift in Sources */,
+				5EED81A01D7DA0B40000EAD9 /* FinadGameViewController.swift in Sources */,
 				5EC062341D6C20810063AA5E /* GameTableviewCell.swift in Sources */,
 				DA8B4BD81D57DD6300F56470 /* CommonUtils.swift in Sources */,
 				DA8B4BD61D57DD6300F56470 /* Helper.swift in Sources */,

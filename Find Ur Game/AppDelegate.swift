@@ -42,15 +42,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         IQKeyboardManager.sharedManager().enable = true
         
         
-        if let user = FIRAuth.auth()?.currentUser
-        {
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let navigationController = mainStoryboard.instantiateViewControllerWithIdentifier("navHome") as? UINavigationController
-            navigationController?.navigationBarHidden = true // or not, your choice.
-            self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-            self.window!.rootViewController = navigationController
-            self.window!.makeKeyAndVisible()
-        }
+//        if let user = FIRAuth.auth()?.currentUser
+//        {
+//            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//            let navigationController = mainStoryboard.instantiateViewControllerWithIdentifier("navHome") as? UINavigationController
+//            navigationController?.navigationBarHidden = true // or not, your choice.
+//            self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+//            self.window!.rootViewController = navigationController
+//            self.window!.makeKeyAndVisible()
+//        } else {
+//            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//            let navigationController = mainStoryboard.instantiateViewControllerWithIdentifier("navSignin") as? UINavigationController
+//            navigationController?.navigationBarHidden = true // or not, your choice.
+//            self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+//            self.window!.rootViewController = navigationController
+//            self.window!.makeKeyAndVisible()
+//        }
         
         //self.saveData()
 //        FIRDatabase.database().reference().child("users").child((FIRAuth.auth()?.currentUser?.uid)!).observeSingleEventOfType(.Value) { (snapshot:FIRDataSnapshot) in
