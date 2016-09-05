@@ -58,7 +58,7 @@ class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, 
     
     @IBOutlet var btnCreateGame: UIButton!
     
-    var sportArray = ["Baseball", "Basketball", "Soccer", "Volleyball"]
+    var sportArray = ["Basketball", "Baseball", "Soccer", "Volleyball"]
     var sportAnswer = ""
     var skillAnswer = ""
     
@@ -123,18 +123,50 @@ class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, 
     }
     
     @IBAction func SportAction(sender: UIButton) {
-        if sender == btnBaseball {
+        vBasketball.backgroundColor = UIColor.whiteColor()
+        lblBasketball.textColor = UIColor.blackColor()
+        vBaseball.backgroundColor = UIColor.whiteColor()
+        lblBasketball.textColor = UIColor.blackColor()
+        vSoccer.backgroundColor = UIColor.whiteColor()
+        lblBasketball.textColor = UIColor.blackColor()
+        vVoleyball.backgroundColor = UIColor.whiteColor()
+        lblBasketball.textColor = UIColor.blackColor()
+        
+        if sender == btnBasketball {
             sportAnswer = sportArray[0]
-        } else if sender == btnBasketball {
+            vBasketball.backgroundColor = UIColor.blackColor()
+            lblBasketball.textColor = UIColor.whiteColor()
+        } else if sender == btnBaseball {
             sportAnswer = sportArray[1]
+            vBaseball.backgroundColor = UIColor.blackColor()
+            lblBaseball.textColor = UIColor.whiteColor()
         } else if sender == btnSoccer {
             sportAnswer = sportArray[2]
+            vSoccer.backgroundColor = UIColor.blackColor()
+            lblSoccer.textColor = UIColor.whiteColor()
         } else if sender == btnVoleyball {
             sportAnswer = sportArray[3]
+            vVoleyball.backgroundColor = UIColor.blackColor()
+            lblVoleyball.textColor = UIColor.whiteColor()
         }
     }
     
     @IBAction func skillLevelAction(sender: UIButton) {
+        
+        btnExpNoExp.backgroundColor = UIColor.whiteColor()
+        btnExpNoExp.titleLabel?.textColor = UIColor.blackColor()
+        btnExpRecreational.backgroundColor = UIColor.whiteColor()
+        btnExpRecreational.titleLabel?.textColor = UIColor.blackColor()
+        btnExpHighSchool.backgroundColor = UIColor.whiteColor()
+        btnExpHighSchool.titleLabel?.textColor = UIColor.blackColor()
+        btnExpCollege.backgroundColor = UIColor.whiteColor()
+        btnExpCollege.titleLabel?.textColor = UIColor.blackColor()
+        btnExpPro.backgroundColor = UIColor.whiteColor()
+        btnExpPro.titleLabel?.textColor = UIColor.blackColor()
+        
+        sender.backgroundColor = UIColor.blackColor()
+        sender.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        
         if sender == btnExpNoExp {
             skillAnswer = "No Experience"
         } else if sender == btnExpRecreational {
