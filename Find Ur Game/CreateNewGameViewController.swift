@@ -11,6 +11,7 @@ import UIKit
 import Foundation
 import Firebase
 import CoreLocation
+import MapKit
 
 import IQKeyboardManagerSwift
 import IQDropDownTextField
@@ -20,7 +21,8 @@ import IQDropDownTextField
  basketball bg color : #222831
  black color : #222831
  */
-class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, SelectLocationDelegate, IQDropDownTextFieldDelegate {
+
+class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, CLLocationManagerDelegate, MKMapViewDelegate, SelectLocationDelegate, IQDropDownTextFieldDelegate {
 
     @IBOutlet var svMain: UIScrollView!
     @IBOutlet var vContent: UIView!
@@ -43,10 +45,6 @@ class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, 
     @IBOutlet var btnVoleyball: UIButton!
     @IBOutlet var lblVoleyball: UILabel!
     
-    @IBOutlet var btnCurrentLocation: UIButton!
-    @IBOutlet var btnSelectLocation: UIButton!
-    @IBOutlet var txtLocation: UITextField!
-    
     @IBOutlet var btnExpNoExp: UIButton!
     @IBOutlet var btnExpRecreational: UIButton!
     @IBOutlet var btnExpHighSchool: UIButton!
@@ -54,7 +52,15 @@ class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, 
     @IBOutlet var btnExpPro: UIButton!
     
     @IBOutlet var txtDate: IQDropDownTextField?
-    @IBOutlet var txtTimeRange: IQDropDownTextField?
+    @IBOutlet var txtTimeRange: UITextField?
+    @IBOutlet var pickerTimeRange: UIPickerView! = UIPickerView()
+    //let RangeArray = ["00:00", "00:00", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30"]
+    var SH = 0, SM = 0, EH = 0, EM = 0;
+    
+    @IBOutlet var btnCurrentLocation: UIButton!
+    @IBOutlet var btnSelectLocation: UIButton!
+    @IBOutlet var txtLocation: UITextField!
+    @IBOutlet weak var mvLocation: MKMapView!
     
     @IBOutlet var btnCreateGame: UIButton!
     
@@ -62,19 +68,57 @@ class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, 
     var sportAnswer = ""
     var skillAnswer = ""
     
-    var ref:FIRDatabaseReference!
+    var ref:FIRDatabaseReference = FIRDatabase.database().reference()
     var geocoder = CLGeocoder()
     var user: FIRUser!
     
     var locationManager: CLLocationManager!
     var currentLocation: CLLocation?
     var selectedLocation: CLLocation?
+    var getCurrentLocation: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         
+        vBasketball.setCornerRadious(4)
+        vBaseball.setCornerRadious(4)
+        vSoccer.setCornerRadious(4)
+        vVoleyball.setCornerRadious(4)
+        
+        btnExpNoExp.setCornerRadious(4)
+        btnExpHighSchool.setCornerRadious(4)
+        btnExpCollege.setCornerRadious(4)
+        btnExpRecreational.setCornerRadious(4)
+        btnExpPro.setCornerRadious(4)
+        
+        btnCreateGame.setCornerRadious(4)
+        
+        txtGameName.setLeftMargin(8)
+        txtDate?.setLeftMargin(8)
+        txtTimeRange?.setLeftMargin(8)
+        txtLocation.setLeftMargin(8)
+        txtLocation.text = "Select Location"
+        
+        let startDateFormat = NSDateFormatter()
+        startDateFormat.dateFormat = "dd MMM yyyy"
+        
+        txtDate?.isOptionalDropDown = false
+        txtDate?.dropDownMode = IQDropDownMode.DatePicker
+        txtDate?.dateFormatter = startDateFormat
+        txtDate?.setDate(NSDate(), animated: true)
+        txtDate?.minimumDate = NSDate()
+        
+        txtTimeRange?.inputView = pickerTimeRange
+        txtTimeRange?.text = "00:00 - 00:00"
+        pickerTimeRange.delegate = self
+        pickerTimeRange.dataSource = self
+        
+        self.initLocationManager()
+        
+        SportAction(btnBasketball)
+        skillLevelAction(btnExpNoExp)
     }
     
     override func didReceiveMemoryWarning() {
@@ -93,10 +137,18 @@ class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, 
     }
     */
 
-    @IBAction func createGameButton(sender: AnyObject) {
-        
-        if txtDate!.date > NSDate() {
-            CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "invalid end date!")
+    @IBAction func createGameButton(sender: AnyObject)
+    {
+        if txtGameName.text == "" || txtGameName.text?.characters.count <= 4 {
+            CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Invalid game name!")
+            return
+        }
+        else if txtLocation.text == "Select Location" || selectedLocation == nil {
+            CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Please select location for game!")
+            return
+        }
+        else if tvDescription.text == "Description" {
+            CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Please some game description!")
             return
         }
 //        else if txtEndDate!.date > txtStartDate!.date {
@@ -110,12 +162,12 @@ class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, 
         let startTimestamp = (txtDate?.date ?? NSDate()).timeIntervalSince1970
         //let endTimestamp = (txtEndDate?.date ?? NSDate()).timeIntervalSince1970
         
-        let game:[NSObject : AnyObject] = ["locName":self.txtLocation.text!,"sport":sportAnswer, "lat": selectedLocation!.coordinate.latitude, "long": selectedLocation!.coordinate.longitude, "gameCreator": MyUserID!, "skillLevel": txtLocation.text!, "groupName": skillAnswer, "gameNotes": "", "timestamp": timestamp, "startTimestamp": startTimestamp, "endTimestamp": "10:00 - 16:00"]
+        let game:[NSObject : AnyObject] = ["locName":self.txtLocation.text!,"sport":sportAnswer, "lat": selectedLocation!.coordinate.latitude, "long": selectedLocation!.coordinate.longitude, "gameCreator": MyUserID!, "skillLevel": skillAnswer, "groupName": txtGameName.text!, "gameNotes": tvDescription.text, "timestamp": timestamp, "startTimestamp": startTimestamp, "endTimestamp": txtTimeRange?.text ?? ""]
         
         ref.child("games").child("active").childByAutoId().updateChildValues(game) { (error, ref) in
             if error == nil {
-                //CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Game saved successfully!")
-                self.navigationController?.popViewControllerAnimated(true)
+                CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Game saved successfully!")
+                //self.navigationController?.popViewControllerAnimated(true)
             } else {
                 CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Opps,we are uable to create game!")
             }
@@ -179,8 +231,48 @@ class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, 
             skillAnswer = "Pro"
         }
     }
+    
     @IBAction func actionSelectLocation(sender: AnyObject) {
         didTapSelectLocation()
+    }
+    
+    @IBAction func actionGetCurrentLocation(sender: AnyObject) {
+        getCurrentLocation = true
+        locationManager.startUpdatingLocation()
+    }
+    
+    
+    // returns the number of 'columns' to display.
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int{
+        return 4
+    }
+    
+    // returns the # of rows in each component..
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int{
+        return (component == 0 || component == 2) ? 24 : 12
+    }
+    
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return "\(String(format: "%02d", ((component == 0 || component == 2) ? row : row*5)))"
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    {
+        print("select : \(component) - \(row)")
+        //pickerBizCat.hidden = true;
+        switch component {
+        case 0:
+            SH = row
+        case 1:
+            SM = row*5
+        case 2:
+            EH = row
+        case 3:
+            SM = row*5
+        default:
+            print(component)
+        }
+        txtTimeRange?.text = "\(String(format: "%02d:%02d - %02d:%02d", SH,SM, EH, EM))"
     }
     
     // MARK: - IQDropDownTextFieldDelegate Methods
@@ -210,6 +302,13 @@ class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, 
             let location = locations.last! as CLLocation
             currentLocation = location
             CLocation = location
+            
+            let center = CLLocationCoordinate2D(latitude: CLocation.coordinate.latitude, longitude: CLocation.coordinate.longitude)
+            let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            self.mvLocation.setRegion(region, animated: true)
+            mvLocation.removeAnnotations(mvLocation.annotations)
+            AddAnnotationAtCoord(center)
+            
             CLGeocoder().reverseGeocodeLocation(currentLocation!, completionHandler: {(placemarks, error)->Void in
                 let pm = placemarks![0]
                 self.OnSelectUserLocation(self.currentLocation, LocationDetail: pm.LocationString())
@@ -238,10 +337,26 @@ class CreateNewGameViewController: UIViewController, CLLocationManagerDelegate, 
     {
         if (Location != nil
             && LocationDetail != "Select Locaion"
-            && LocationDetail?.characters.count > 3)
+            && LocationDetail?.characters.count > 3) || (getCurrentLocation == true)
         {
+            getCurrentLocation = false
             self.selectedLocation = Location
             txtLocation.text = LocationDetail
+            
+            let center = CLLocationCoordinate2D(latitude: Location?.coordinate.latitude ?? 0, longitude: Location?.coordinate.longitude ?? 0)
+            let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            self.mvLocation.setRegion(region, animated: true)
+            mvLocation.removeAnnotations(mvLocation.annotations)
+            AddAnnotationAtCoord(self.selectedLocation!.coordinate)
         }
+    }
+    
+    func AddAnnotationAtCoord(Coord: CLLocationCoordinate2D)
+    {
+        let newAnotation = MKPointAnnotation()
+        newAnotation.coordinate = Coord
+        newAnotation.title = "Selected Location"
+        newAnotation.subtitle = ""
+        mvLocation.addAnnotation(newAnotation)
     }
 }

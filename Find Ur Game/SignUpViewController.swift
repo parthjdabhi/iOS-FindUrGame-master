@@ -13,13 +13,15 @@ import Firebase
 class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
     
     @IBOutlet var facebook: UIButton!
-    @IBOutlet var dobField: UITextField!
-    @IBOutlet var heightField: UITextField!
+    
     @IBOutlet var firstNameField: UITextField!
     @IBOutlet var lastNameField: UITextField!
     @IBOutlet var emailField: UITextField!
     @IBOutlet var passwordField: UITextField!
-    @IBOutlet var phoneField: UITextField!
+    //@IBOutlet var phoneField: UITextField!
+    @IBOutlet var dobField: UITextField!
+    @IBOutlet var heightField: UITextField!
+    @IBOutlet var weightField: UITextField!
     
     var finalFeet:String = ""
     var finalInch:String = ""
@@ -42,9 +44,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
         self.lastNameField.delegate = self
         self.emailField.delegate = self
         self.passwordField.delegate = self
-        self.phoneField.delegate = self
+        //self.phoneField.delegate = self
         self.dobField.delegate = self
         self.heightField.delegate = self
+        self.weightField.delegate = self
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -148,7 +151,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
     }
     
     
-    @IBAction func createProfile(sender: AnyObject) {
+    @IBAction func createProfile(sender: AnyObject)
+    {
         let email = self.emailField.text!
         let password = self.passwordField.text!
         // make sure the user entered both email & password
@@ -160,16 +164,21 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
                     let lName = self.lastNameField.text ?? ""
                     
                     FIREmailPasswordAuthProvider.credentialWithEmail(email, password: password)
-                    self.ref.child("users").child(user!.uid).setValue(["userFirstName": self.firstNameField.text!,
-                        "userLastName": self.lastNameField.text!,
+                    self.ref.child("users").child(user!.uid).setValue(["userFirstName": fName,
+                        "userLastName": lName,
                         "email": email,
-                        "userPhoneNumber": self.phoneField.text!,
+                        //"userPhoneNumber": self.phoneField.text!,
                         "userDOB": self.dobField.text!,
                         "userHeight": self.heightField.text!,
+                        "userWeight": self.weightField.text!,
                         "name": "\(fName) \(fName)"])
                     CommonUtils.sharedUtils.hideProgress()
-                    let photoViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoViewController") as! PhotoViewController!
-                    self.navigationController?.pushViewController(photoViewController, animated: true)
+                    
+                    //after we directly get user picture in sign up screen
+                    //let photoViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoViewController") as! PhotoViewController!
+                    //self.navigationController?.pushViewController(photoViewController, animated: true)
+                    
+                    self.navigationController?.pushViewController(MyTabBarViewController.init(), animated: true)
                 } else {
                     dispatch_async(dispatch_get_main_queue(), {() -> Void in
                         CommonUtils.sharedUtils.hideProgress()

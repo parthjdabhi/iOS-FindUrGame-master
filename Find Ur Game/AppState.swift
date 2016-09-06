@@ -23,6 +23,10 @@ class AppState: NSObject {
     //var friend: UserData?
 }
 
+let myUserID = {
+    return FIRAuth.auth()?.currentUser?.uid
+}()
+
 //Global Data
 var CLocation:CLLocation = CLLocation()
 var CLocationPlace:String = String()

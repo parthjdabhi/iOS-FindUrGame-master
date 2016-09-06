@@ -16,17 +16,6 @@ import FBSDKShareKit
 //import Fabric
 
 
-extension UIColor {
-    convenience init(rgb: UInt) {
-        self.init(
-            red: CGFloat((rgb & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((rgb & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(rgb & 0x0000FF) / 255.0,
-            alpha: CGFloat(1.0)
-        )
-    }
-}
-
 @objc(FirebaseSignInViewController)
 class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
     
@@ -38,20 +27,19 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
     
     var ref:FIRDatabaseReference!
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-//        emailField.text = "Email"
-//        emailField.textColor = UIColor.whiteColor()
-//        passwordField.text = "Password"
-//        passwordField.textColor = UIColor.whiteColor()
-        login.layer.borderWidth = 0
-        view.backgroundColor = UIColor(rgb: 0x282828)
-        
-//        let attributesDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor(),NSFontAttributeName:UIFont.fontNamesForFamilyName("Arial")]
-//        emailField.attributedPlaceholder = NSAttributedString(string: "Email", attributes: attributesDictionary)
-        
-        emailField.text = "Email"
-        passwordField.text = "Password"
+        emailField.setLeftMargin(12)
+        passwordField.setLeftMargin(12)
+        emailField.setCornerRadious()
+        passwordField.setCornerRadious()
+        login.setCornerRadious()
+        facebook.setCornerRadious()
+
+        let attributesDictionary = [NSForegroundColorAttributeName: UIColor.darkGrayColor()]
+        emailField.attributedPlaceholder = NSAttributedString(string: "Email", attributes: attributesDictionary)
+        passwordField.attributedPlaceholder = NSAttributedString(string: "Password", attributes: attributesDictionary)
         
     }
     
@@ -96,8 +84,9 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
                 }
                 else{
                     //self.signedIn(user!)
-                    let mainScreenViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MainScreenViewController") as! MainScreenViewController!
-                    self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+//                    let mainScreenViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MainScreenViewController") as! MainScreenViewController!
+//                    self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+                    self.navigationController?.pushViewController(MyTabBarViewController.init(), animated: true)
                 }
             }
         }
@@ -188,8 +177,9 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
                                         }
                                     }
                                 }
-                                let mainScreenViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MainScreenViewController") as! MainScreenViewController!
-                                self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+                                //let mainScreenViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MainScreenViewController") as! MainScreenViewController!
+                                //self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+                                self.navigationController?.pushViewController(MyTabBarViewController.init(), animated: true)
                             }
                         })
                     }
@@ -242,8 +232,9 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
     }*/
     
     func signedIn(user: FIRUser?) {
-        let mainScreenViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MainScreenViewController") as! MainScreenViewController!
-        self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+        //let mainScreenViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MainScreenViewController") as! MainScreenViewController!
+        //self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+        self.navigationController?.pushViewController(MyTabBarViewController.init(), animated: true)
         
         //        MeasurementHelper.sendLoginEvent()
         //

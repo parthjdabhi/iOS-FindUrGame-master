@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "calander-thin.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "calander-thin.png",
       "scale" : "2x"
     },
     {
