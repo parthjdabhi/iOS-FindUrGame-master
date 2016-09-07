@@ -64,7 +64,6 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
     
     @IBOutlet var btnCreateGame: UIButton!
     
-    var sportArray = ["Basketball", "Baseball", "Soccer", "Volleyball"]
     var sportAnswer = ""
     var skillAnswer = ""
     
@@ -163,11 +162,13 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
         //let endTimestamp = (txtEndDate?.date ?? NSDate()).timeIntervalSince1970
         
         let game:[NSObject : AnyObject] = ["locName":self.txtLocation.text!,"sport":sportAnswer, "lat": selectedLocation!.coordinate.latitude, "long": selectedLocation!.coordinate.longitude, "gameCreator": MyUserID!, "skillLevel": skillAnswer, "groupName": txtGameName.text!, "gameNotes": tvDescription.text, "timestamp": timestamp, "startTimestamp": startTimestamp, "endTimestamp": txtTimeRange?.text ?? ""]
+        print(game)
         
+        CommonUtils.sharedUtils.showProgress(self.view, label: "Loading..")
         ref.child("games").child("active").childByAutoId().updateChildValues(game) { (error, ref) in
+            CommonUtils.sharedUtils.hideProgress()
             if error == nil {
                 CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Game saved successfully!")
-                //self.navigationController?.popViewControllerAnimated(true)
             } else {
                 CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Opps,we are uable to create game!")
             }
@@ -186,19 +187,19 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
         
         if sender == btnBasketball {
             sportAnswer = sportArray[0]
-            vBasketball.backgroundColor = UIColor.blackColor()
+            vBasketball.backgroundColor = clrBlackSelected
             lblBasketball.textColor = UIColor.whiteColor()
         } else if sender == btnBaseball {
             sportAnswer = sportArray[1]
-            vBaseball.backgroundColor = UIColor.blackColor()
+            vBaseball.backgroundColor = clrBlackSelected
             lblBaseball.textColor = UIColor.whiteColor()
         } else if sender == btnSoccer {
             sportAnswer = sportArray[2]
-            vSoccer.backgroundColor = UIColor.blackColor()
+            vSoccer.backgroundColor = clrBlackSelected
             lblSoccer.textColor = UIColor.whiteColor()
         } else if sender == btnVoleyball {
             sportAnswer = sportArray[3]
-            vVoleyball.backgroundColor = UIColor.blackColor()
+            vVoleyball.backgroundColor = clrBlackSelected
             lblVoleyball.textColor = UIColor.whiteColor()
         }
     }
@@ -216,7 +217,7 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
         btnExpPro.backgroundColor = UIColor.whiteColor()
         btnExpPro.titleLabel?.textColor = UIColor.blackColor()
         
-        sender.backgroundColor = UIColor.blackColor()
+        sender.backgroundColor = clrBlackSelected
         sender.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         
         if sender == btnExpNoExp {

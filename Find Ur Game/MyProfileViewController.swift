@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import SDWebImage
+import UIActivityIndicator_for_SDWebImage
 
 class MyProfileViewController: UIViewController {
 
@@ -52,21 +54,35 @@ class MyProfileViewController: UIViewController {
         print(myUserID)
         ref.child("users").child(myUserID!).observeEventType(.Value, withBlock: { (snapshot) in
             AppState.sharedInstance.currentUser = snapshot
-            let userFirstName = snapshot.value!["userFirstName"] as! String!
-            let userLastName = snapshot.value!["userLastName"] as! String!
-            let userHeight = snapshot.value!["userHeight"] as! String!
+            let userFirstName = snapshot.value!["userFirstName"] as? String ?? ""
+            let userLastName = snapshot.value!["userLastName"] as? String ?? ""
+            let userHeight = snapshot.value!["userHeight"] as? String ?? ""
+            let userWeight = snapshot.value!["userWeight"] as? String ?? ""
 //            let baseballExperience = snapshot.value!["baseball"] as! String!
 //            let basketballExperience = snapshot.value!["basketball"] as! String!
 //            let soccerExerpience = snapshot.value!["soccer"] as! String!
 //            let volleyballExperience = snapshot.value!["volleyball"] as! String!
             
             self.lblName.text = userFirstName + " " + userLastName
-            self.lblBodyDetails.text = userHeight
+            self.lblBodyDetails.text = "\(userWeight) W  -  \(userHeight) H"
             
-            if let base64String = snapshot.value!["image"] as? String {
-                // decode image
-                self.imgProfile.image = CommonUtils.sharedUtils.decodeImage(base64String)
-            } else {
+            if let userSport = snapshot.value!["userSport"] as? String {
+                if self.sportArray.contains(userSport) {
+                    self.SportAction(((userSport == self.sportArray[0]) ? self.btnBasketball : ((userSport == self.sportArray[1]) ? self.btnBaseball : ((userSport == self.sportArray[2]) ? self.btnSoccer : self.btnVoleyball))))
+                }
+            }
+            
+            if let userProfile = snapshot.value!["userProfile"] as? String {
+                let userProfileNSURL = NSURL(string: "\(userProfile)")
+                self.imgProfile.setImageWithURL(userProfileNSURL, placeholderImage: UIImage(named: "placeholder"), options: SDWebImageOptions.AllowInvalidSSLCertificates, usingActivityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+            }
+            else if let facebookData = snapshot.value!["facebookData"] as? NSDictionary
+                where facebookData["profilePhotoURL"] != nil
+            {
+                let userProfileNSURL = NSURL(string: "\(facebookData["profilePhotoURL"] as? String ?? "")")
+                self.imgProfile.setImageWithURL(userProfileNSURL, placeholderImage: UIImage(named: "placeholder"), options: SDWebImageOptions.AllowInvalidSSLCertificates, usingActivityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+            }
+            else {
                 print("No Profile Picture")
             }
             })
@@ -120,7 +136,26 @@ class MyProfileViewController: UIViewController {
         }
     }
     
-    @IBAction func actionCreategame(sender: AnyObject) {
+    @IBAction func actionLogout(sender: AnyObject)
+    {
+        let actionSheetController = UIAlertController (title: "Message", message: "Are you sure want to logout?", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        actionSheetController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        actionSheetController.addAction(UIAlertAction(title: "Logout", style: UIAlertActionStyle.Destructive, handler: { (actionSheetController) -> Void in
+            print("handle Logout action...")
+            
+            let firebaseAuth = FIRAuth.auth()
+            do {
+                try firebaseAuth?.signOut()
+                AppState.sharedInstance.signedIn = false
+            } catch let signOutError as NSError {
+                print ("Error signing out: \(signOutError)")
+            }
+            let loginViewController = self.storyboard?.instantiateViewControllerWithIdentifier("FirebaseSignInViewController") as! FirebaseSignInViewController!
+            self.navigationController?.pushViewController(loginViewController, animated: true)
+        }))
+        
+        presentViewController(actionSheetController, animated: true, completion: nil)
+        
     }
 
 }

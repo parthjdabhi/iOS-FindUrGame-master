@@ -79,6 +79,7 @@ class PhotoViewController: UIViewController, UITextFieldDelegate, UINavigationCo
                                                 let imagePicker = UIImagePickerController()
                                                 imagePicker.delegate = self
                                                 imagePicker.sourceType = .Camera
+                                                imagePicker.allowsEditing = true
                                                 self.presentViewController(imagePicker,
                                                                            animated: true,
                                                                            completion: nil)
@@ -91,6 +92,7 @@ class PhotoViewController: UIViewController, UITextFieldDelegate, UINavigationCo
                                             let imagePicker = UIImagePickerController()
                                             imagePicker.delegate = self
                                             imagePicker.sourceType = .PhotoLibrary
+                                            imagePicker.allowsEditing = true
                                             self.presentViewController(imagePicker,
                                                                        animated: true,
                                                                        completion: nil)
@@ -237,8 +239,7 @@ class PhotoViewController: UIViewController, UITextFieldDelegate, UINavigationCo
     // Activity Indicator methods
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            photo.contentMode = .ScaleAspectFit
+        if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             photo.image = self.scaleImage(pickedImage, maxDimension: 300)
         }
         

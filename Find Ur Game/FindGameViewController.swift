@@ -12,11 +12,22 @@ import MapKit
 
 import Firebase
 
-class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
 
     @IBOutlet var btnCurrentLocation: UIButton!
     @IBOutlet weak var mvLocation: MKMapView!
     @IBOutlet weak var cvGames: UICollectionView!
+    
+    //Game Detail View
+    @IBOutlet var vOverlay: UIView!
+    @IBOutlet var vGameDetail: UIView!
+    @IBOutlet var btnCloseDetalView: UIButton!
+    @IBOutlet var lblSport: UILabel!
+    @IBOutlet var lblGameName: UILabel!
+    @IBOutlet var lblDate: UILabel!
+    @IBOutlet var lblTime: UILabel!
+    @IBOutlet var lblLocation: UILabel!
+    @IBOutlet var lblDescription: UILabel!
     
     var ref:FIRDatabaseReference = FIRDatabase.database().reference()
     var geocoder = CLGeocoder()
@@ -30,12 +41,31 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
     var isRefreshingData = false
     var filterWithKm = 20
     
+    private var currentPage: Int = 1
+    private var pageSize: CGSize {
+        let layout = self.cvGames.collectionViewLayout as! PDCarouselFlowLayout
+        var pageSize = layout.itemSize
+//        if layout.scrollDirection == .Horizontal {
+//            pageSize.width += layout.minimumLineSpacing
+//        } else {
+//            pageSize.height += layout.minimumLineSpacing
+//        }
+        return pageSize
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        self.vOverlay.alpha = 0
+        
+        self.cvGames.showsHorizontalScrollIndicator = false
+        let layout = self.cvGames.collectionViewLayout as! PDCarouselFlowLayout
+        layout.spacingMode = PDCarouselFlowLayoutSpacingMode.overlap(visibleOffset: 100)
+        layout.scrollDirection = .Horizontal
         
         btnCurrentLocation.setCornerRadious(btnCurrentLocation.frame.size.width/2)
+        
         self.initLocationManager()
         if CLocation.coordinate.latitude != 0 {
             refreshData()
@@ -150,6 +180,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
                     
                     //places.removeAtIndex(0)
                     placeDict["title"] = "\(groupString) -- \(street), \(city) \(zip)"
+                    placeDict["Address"] = "\(street), \(city) \(zip)"
                     //placeDict["lat"] = "\(userLat)"
                     //placeDict["long"] = "\(userLong)"
                     places.append(placeDict)
@@ -172,6 +203,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
             }
         }
     }
+    
     func filterData()
     {
         //Can Filter data
@@ -212,7 +244,10 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
                 return false
             })
         }
+        
+        cvGames.reloadData()
     }
+    
     func ShowFilteredGamePlace() {
         for (index, element) in filteredPlaces.enumerate()
         {
@@ -239,6 +274,64 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
     @IBAction func actionGetCurrentLocation(sender: AnyObject) {
         getCurrentLocation = true
         locationManager.startUpdatingLocation()
+    }
+    
+    // MARK: - Card Collection Delegate & DataSource
+    
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        // Set Static values 5 here for test purpose
+        return filteredPlaces.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GameNearMeCollectionViewCell.identifier, forIndexPath: indexPath) as! GameNearMeCollectionViewCell
+        
+        let game = filteredPlaces[indexPath.row]
+        print(game)
+        //cell.image.layer.cornerRadius = max(cell.image.frame.size.width, cell.image.frame.size.height) / 2
+        //cell.image.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.1).CGColor
+        
+        let sport = game["sport"] ?? ""
+        cell.lblSport.textColor = ((sport == sportArray[0]) ? clrGreen : ((sport == sportArray[1]) ? clrOrange : ((sport == sportArray[2]) ? clrRed : clrPurple)))
+        
+        cell.lblSport.text = game["sport"] ?? ""
+        cell.lblGameName.text = game["groupName"] ?? ""
+        cell.lblDate.text = (game["startTimestamp"] ?? "1").asDateUTC?.strDateInUTC
+        cell.lblTime.text = game["endTimestamp"] ?? ""
+        //cell.lblMoreCount.text = "2+"
+        
+        cell.selectedBackgroundView = nil
+        
+        return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        collectionView.deselectItemAtIndexPath(indexPath, animated: true)
+        ShowGameDetail(filteredPlaces[indexPath.row])
+    }
+    
+    
+    // MARK: - UIScrollViewDelegate
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        let layout = self.cvGames.collectionViewLayout as! PDCarouselFlowLayout
+        let pageSide = (layout.scrollDirection == .Horizontal) ? self.pageSize.width : self.pageSize.height
+        let offset = (layout.scrollDirection == .Horizontal) ? scrollView.contentOffset.x : scrollView.contentOffset.y
+        
+        currentPage = Int(floor((offset - pageSide / 2) / pageSide) + 1)
+        print("currentPage = \(currentPage)")
+        
+        let game = filteredPlaces[currentPage]
+        let lat = Double(game["lat"] ?? "1") ?? 0
+        let long = Double(game["long"] ?? "1") ?? 0
+        
+        let center = CLLocationCoordinate2D(latitude: lat, longitude: long)
+        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
+        self.mvLocation.setRegion(region, animated: true)
     }
     
     // MARK: - Location
@@ -299,6 +392,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         if annotation is MKUserLocation {
             imgPin = UIImage(named: "map-location-green")
         }
+        imgPin = UIImage(named: "map-location-green")
         
         let annotationIdentifier = "Pin"
         
@@ -322,4 +416,32 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         
         return annotationView
     }
+    
+    // MARK: - Game Detail View
+    @IBAction func actionCloseGameDetail(sender: AnyObject) {
+        UIView.animateWithDuration(0.5, animations: {
+            self.vOverlay.alpha = 0
+        }) { (completion) in
+                self.cvGames.alpha = 1
+        }
+    }
+    
+    func ShowGameDetail(game:Dictionary<String,String>)
+    {
+        UIView.animateWithDuration(0.5, animations: {
+            self.vOverlay.alpha = 1
+        })
+        
+        print(game)
+        
+        lblSport.text = game["sport"] ?? ""
+        lblGameName.text = game["groupName"] ?? ""
+        lblDate.text = (game["startTimestamp"] ?? "1").asDateUTC?.strDateInUTC
+        lblTime.text = game["endTimestamp"] ?? ""
+        lblSport.text = game["sport"] ?? ""
+        lblLocation.text = game["Address"] ?? ""
+        lblDescription.text = game["gameNotes"] ?? ""
+        
+    }
+    
 }

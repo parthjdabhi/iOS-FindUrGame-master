@@ -25,7 +25,7 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet var login: UIButton!
     
-    var ref:FIRDatabaseReference!
+    var ref:FIRDatabaseReference = FIRDatabase.database().reference()
     
     override func viewDidLoad()
     {
@@ -57,7 +57,6 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
         if let user = FIRAuth.auth()?.currentUser {
             self.signedIn(user)
         }
-        ref = FIRDatabase.database().reference()
     }
     
     override func  preferredStatusBarStyle()-> UIStatusBarStyle {
@@ -150,46 +149,76 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
                         print(error?.localizedDescription)
                         CommonUtils.sharedUtils.hideProgress()
                     }
-                    else {
-                        let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"id,first_name,last_name,email,gender,friends,picture"])
-                        graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
-                            CommonUtils.sharedUtils.hideProgress()
-                            if ((error) != nil) {
-                                // Process error
-                                print("Error: \(error)")
-                            } else {
-                                print("fetched user: \(result)")
-                                
-                                self.ref.child("users").child(user!.uid).child("userInfo").setValue([
-                                    "facebookData": ["userFirstName": result.valueForKey("first_name") as! String!,
-                                        "userLastName": result.valueForKey("last_name") as! String!,
-                                        "gender": result.valueForKey("gender") as! String!,
-                                        "email": result.valueForKey("email") as! String!],
-                                    "userFirstName": result.valueForKey("first_name") as! String!,
-                                    "userLastName": result.valueForKey("last_name") as! String!,
-                                    "email": result.valueForKey("email") as! String!])
-                                
-                                if let picture = result.objectForKey("picture") {
-                                    if let pictureData = picture.objectForKey("data"){
-                                        if let pictureURL = pictureData.valueForKey("url") {
-                                            print(pictureURL)
-                                            self.ref.child("users").child(user!.uid).child("facebookData").child("profilePhotoURL").setValue(pictureURL)
-                                        }
-                                    }
-                                }
-                                //let mainScreenViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MainScreenViewController") as! MainScreenViewController!
-                                //self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+                    else
+                    {
+                        //Fetch current user and check isProfileSet to set profile data, other wise goto main screen
+                        print(myUserID)
+                        self.ref.child("users").child(myUserID!).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+                            AppState.sharedInstance.currentUser = snapshot
+                            if let isProfileSet = snapshot.value!["isProfileSet"] as? String
+                                where isProfileSet == "1"
+                            {
                                 self.navigationController?.pushViewController(MyTabBarViewController.init(), animated: true)
                             }
-                        })
+                            else {
+                                print("No isProfileSet")
+                                self.saveFBDetail()
+                            }
+                            })
+                        { (error) in
+                            print(error.localizedDescription)
+                        }
+                        
                     }
                 })
             }
         }
     }
+    
+    func saveFBDetail() {
+        let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"id,first_name,last_name,email,gender,friends,picture"])
+        graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
+            CommonUtils.sharedUtils.hideProgress()
+            if ((error) != nil) {
+                // Process error
+                print("Error: \(error)")
+            } else {
+                print("fetched user: \(result)")
+                
+                let fbData:Dictionary<String, AnyObject> = ["userFirstName": result.valueForKey("first_name") as? String ?? "",
+                    "userLastName": result.valueForKey("last_name") as? String ?? "",
+                    "gender": result.valueForKey("gender") as? String ?? "",
+                    "email": result.valueForKey("email") as? String ?? ""]
+                
+                var data:Dictionary<String, AnyObject> = [
+                    "facebookData": fbData,
+                    "userFirstName": result.valueForKey("first_name") as? String ?? "",
+                    "userLastName": result.valueForKey("last_name") as? String ?? ""]
+                
+                if let email = result.valueForKey("email") as? String {
+                    data["email"] = email
+                }
+                print("DATA TO UPDATE : \(data)")
+                
+                self.ref.child("users").child(myUserID!).updateChildValues(data)
+                
+                if let picture = result.objectForKey("picture") {
+                    if let pictureData = picture.objectForKey("data"){
+                        if let pictureURL = pictureData.valueForKey("url") {
+                            print(pictureURL)
+                            self.ref.child("users").child(myUserID!).child("facebookData").child("profilePhotoURL").setValue(pictureURL)
+                        }
+                    }
+                }
+                let SignUpFBVC = self.storyboard?.instantiateViewControllerWithIdentifier("SignupFBViewController") as! SignupFBViewController!
+                self.navigationController?.pushViewController(SignUpFBVC, animated: true)
+            }
+        })
+    }
+    
     /*
     @IBAction func twitterLogin(sender: AnyObject) {
-        
+     
         let manager = Twitter()
         CommonUtils.sharedUtils.showProgress(self.view, label: "Loading...")
         manager.logInWithViewController(self) { (session, error) in
@@ -200,7 +229,7 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
             else {
                 let token = session!.authToken
                 let secret = session!.authTokenSecret
-                
+     
                 let credential = FIRTwitterAuthProvider.credentialWithToken(token, secret: secret)
                 CommonUtils.sharedUtils.showProgress(self.view, label: "Uploading Information....")
                 FIRAuth.auth()?.signInWithCredential(credential, completion: { (user, error) in

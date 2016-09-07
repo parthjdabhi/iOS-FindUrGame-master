@@ -89,12 +89,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>SlideMenuControllerSwift.xcscheme</key>
+		<key>SwiftyJSON.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>SwiftyJSON.xcscheme</key>
+		<key>UIActivityIndicator-for-SDWebImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -147,11 +147,6 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6512F345F488CFA287F911143753340B</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>6C93DE13A9E39F5C57B693BE90DBB2D0</key>
 		<dict>
 			<key>primary</key>
@@ -167,6 +162,11 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>7A8625135DEFCC25F271BC4103E6ED84</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>8EFE724FDDAA2478F44F082C05BA272C</key>
 		<dict>
 			<key>primary</key>
@@ -177,7 +177,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A310B7A0321CD3DFA41B5C6D67B511CC</key>
+		<key>B054DE9DED6F721D91B3362CA7CFB72A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -202,7 +202,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>ED547C8F8241C5F0D23012ACCA6B5643</key>
+		<key>F2E69E0C9B5D6CF8C25365C88CA39210</key>
 		<dict>
 			<key>primary</key>
 			<true/>

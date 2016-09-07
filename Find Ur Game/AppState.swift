@@ -30,3 +30,14 @@ let myUserID = {
 //Global Data
 var CLocation:CLLocation = CLLocation()
 var CLocationPlace:String = String()
+
+let storage = FIRStorage.storage()
+let storageRef = storage.reference()
+
+// Create file metadata including the content type
+//let metadata = {
+//    let meta = FIRStorageMetadata()
+//    meta.contentType = "image/jpeg"
+//    return meta
+//}()
+        

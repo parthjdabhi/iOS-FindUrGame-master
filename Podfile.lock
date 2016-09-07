@@ -108,8 +108,9 @@ PODS:
   - SDWebImage (3.8.1):
     - SDWebImage/Core (= 3.8.1)
   - SDWebImage/Core (3.8.1)
-  - SlideMenuControllerSwift (2.2.2)
   - SwiftyJSON (2.3.2)
+  - UIActivityIndicator-for-SDWebImage (1.2):
+    - SDWebImage (~> 3.7)
   - UICKeyChainStore (2.1.0)
 
 DEPENDENCIES:
@@ -132,7 +133,7 @@ DEPENDENCIES:
   - Mixpanel
   - OAuthSwift (~> 0.5.0)
   - SDWebImage (~> 3.8)
-  - SlideMenuControllerSwift
+  - UIActivityIndicator-for-SDWebImage
 
 SPEC CHECKSUMS:
   ActionSheetPicker-3.0: d11a4c12c6aaf704b8a3f56d179198c99f3e41e6
@@ -164,10 +165,10 @@ SPEC CHECKSUMS:
   Mixpanel: 0e4f1f9a2ac612b589b2894830038418c2587428
   OAuthSwift: 1ef042d4362e755e24a78f158d817245641a5d24
   SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
-  SlideMenuControllerSwift: e257221100c39d49edccaaeb0238b55a0c67953a
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
+  UIActivityIndicator-for-SDWebImage: 7bf7ebbf0ed1747dedc0d6e949c4603a6d0f9e0c
   UICKeyChainStore: f1cbd42216a113f0165de1e733e62905b8823432
 
-PODFILE CHECKSUM: 8d737c332ced0b3555dcfb02b69a55536653060f
+PODFILE CHECKSUM: cdd24884408b1850475d77331cce1d453357c074
 
 COCOAPODS: 1.0.1

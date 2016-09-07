@@ -1,8 +1,8 @@
 //
-//  SignUpViewController.swift
-//  Ballpoint
+//  SignupFBViewController.swift
+//  Find Ur Game
 //
-//  Created by Dustin Allen on 7/2/16.
+//  Created by iParth on 9/7/16.
 //  Copyright © 2016 Harloch. All rights reserved.
 //
 
@@ -12,7 +12,7 @@ import Firebase
 import SDWebImage
 import UIActivityIndicator_for_SDWebImage
 
-class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+class SignupFBViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     @IBOutlet var facebook: UIButton!
     
@@ -22,8 +22,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
     
     @IBOutlet var firstNameField: UITextField!
     @IBOutlet var lastNameField: UITextField!
-    @IBOutlet var emailField: UITextField!
-    @IBOutlet var passwordField: UITextField!
     @IBOutlet var phoneField: UITextField!
     @IBOutlet var dobField: UITextField!
     @IBOutlet var heightField: UITextField!
@@ -69,8 +67,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
         
         firstNameField.setCornerRadious(4)
         lastNameField.setCornerRadious(4)
-        emailField.setCornerRadious(4)
-        passwordField.setCornerRadious(4)
         phoneField.setCornerRadious(4)
         dobField.setCornerRadious(4)
         heightField.setCornerRadious(4)
@@ -78,8 +74,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
         
         firstNameField.setLeftMargin(8)
         lastNameField.setLeftMargin(8)
-        emailField.setLeftMargin(8)
-        passwordField.setLeftMargin(8)
         phoneField.setLeftMargin(8)
         dobField.setLeftMargin(8)
         heightField.setLeftMargin(8)
@@ -94,12 +88,31 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
         
         self.firstNameField.delegate = self
         self.lastNameField.delegate = self
-        self.emailField.delegate = self
-        self.passwordField.delegate = self
         self.phoneField.delegate = self
         self.dobField.delegate = self
         self.heightField.delegate = self
         self.weightField.delegate = self
+        
+        
+        print(myUserID)
+        ref.child("users").child(myUserID!).observeEventType(.Value, withBlock: { (snapshot) in
+            AppState.sharedInstance.currentUser = snapshot
+            let userFirstName = snapshot.value!["userFirstName"] as? String ?? ""
+            let userLastName = snapshot.value!["userLastName"] as? String ?? ""
+            
+            self.firstNameField.text = userFirstName
+            self.lastNameField.text = userLastName
+
+            if let facebookData = snapshot.value!["facebookData"] as? NSDictionary
+                where facebookData["profilePhotoURL"] != nil
+            {
+                let userProfileNSURL = NSURL(string: "\(facebookData["profilePhotoURL"] as? String ?? "")")
+                self.imgProfile.setImageWithURL(userProfileNSURL, placeholderImage: UIImage(named: "placeholder"), options: SDWebImageOptions.AllowInvalidSSLCertificates, usingActivityIndicatorStyle: UIActivityIndicatorViewStyle.White)
+            }
+        })
+        { (error) in
+            print(error.localizedDescription)
+        }
     }
     
     
@@ -126,10 +139,9 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
         if component == 0 {
             return String(pickOptionFeet[row])
         } else {
-            
             return String(pickOptionInch[row])
         }
-//        return pickOption[component][row]
+        //return pickOption[component][row]
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -203,82 +215,60 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
             CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Required you name!")
             return
         }
-        else if emailField.text == "" || emailField.text?.characters.count <= 4 {
-            CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Please add correct email!")
-            return
-        }
-        else if passwordField.text?.characters.count < 6 {
-            CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Your password must be of atleast six character long.")
-            return
-        }
-        if heightField.text == "" ||
+        else if heightField.text == "" ||
             weightField.text == ""
         {
             CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Please add your height and weight!")
             return
         }
-        else if imgTaken == false {
-            CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Please select your profile picture.")
-            return
+        
+        if imgTaken == false {
+            CommonUtils.sharedUtils.showProgress(self.view, label: "Loading...")
+            self.saveProfile(nil, imgPath: nil)
+        } else {
+            self.saveImage { (downloadURL,imgPath) in
+                self.saveProfile(downloadURL,imgPath: imgPath)
+            }
         }
         
-        self.saveImage { (downloadURL,imgPath) in
-            self.saveProfile(downloadURL,imgPath: imgPath)
-        }
     }
     
-    func saveProfile(ProfileUrl:String,imgPath:String) {
-        let email = self.emailField.text!
-        let password = self.passwordField.text!
+    func saveProfile(ProfileUrl:String?,imgPath:String?) {
+        let fName = self.firstNameField.text ?? ""
+        let lName = self.lastNameField.text ?? ""
         
-        if email != "" && password != "" {
-            //CommonUtils.sharedUtils.showProgress(self.view, label: "Registering...")
-            FIRAuth.auth()?.createUserWithEmail(email, password: password, completion:  { (user, error) in
-                if error == nil {
-                    let fName = self.firstNameField.text ?? ""
-                    let lName = self.lastNameField.text ?? ""
-                    
-                    FIREmailPasswordAuthProvider.credentialWithEmail(email, password: password)
-                    
-                    let data:Dictionary<String,AnyObject> = ["userFirstName": fName,
-                        "userLastName": lName,
-                        "name": "\(fName) \(fName)",
-                        "email": email,
-                        "userProfile": ProfileUrl,
-                        "userProfilePath": imgPath,
-                        "userSport": self.sportAnswer,
-                        "userPhoneNumber": self.phoneField.text ?? "",
-                        "userDOB": self.dobField.text!,
-                        "userHeight": self.heightField.text ?? "",
-                        "userWeight": self.weightField.text ?? ""]
-                    
-                    print(data)
-                    self.ref.child("users").child(user!.uid).setValue(data)
-                    CommonUtils.sharedUtils.hideProgress()
-                    
-                    //after we directly get user picture in sign up screen
-                    //let photoViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoViewController") as! PhotoViewController!
-                    //self.navigationController?.pushViewController(photoViewController, animated: true)
-                    
-                    self.navigationController?.pushViewController(MyTabBarViewController.init(), animated: true)
-                } else {
-                    dispatch_async(dispatch_get_main_queue(), {() -> Void in
-                        CommonUtils.sharedUtils.hideProgress()
-                        CommonUtils.sharedUtils.showAlert(self, title: "Error", message: (error?.localizedDescription)!)
-                    })
-                }
-            })
-        } else {
+        var data:Dictionary<String,AnyObject> = ["userFirstName": fName,
+                    "userLastName": lName,
+                    "name": "\(fName) \(fName)",
+                    "isProfileSet": "1",
+                    "userSport": self.sportAnswer,
+                    "userPhoneNumber": self.phoneField.text ?? "",
+                    "userDOB": self.dobField.text!,
+                    "userHeight": self.heightField.text ?? "",
+                    "userWeight": self.weightField.text ?? ""]
+        
+        if ProfileUrl != nil && imgPath != nil
+        {
+            data["userProfile"] = ProfileUrl
+            data["userProfilePath"] = imgPath
+        }
+        
+        print(data)
+        self.ref.child("users").child(myUserID!).updateChildValues(data) { (error, ref) in
             CommonUtils.sharedUtils.hideProgress()
-            let alert = UIAlertController(title: "Error", message: "Enter email & password!", preferredStyle: .Alert)
-            let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
-            alert.addAction(action)
+            if error == nil {
+                self.navigationController?.pushViewController(MyTabBarViewController.init(), animated: true)
+            } else {
+                dispatch_async(dispatch_get_main_queue(), {() -> Void in
+                    CommonUtils.sharedUtils.showAlert(self, title: "Error", message: (error?.localizedDescription)!)
+                })
+            }
         }
     }
     
     func saveImage(onCompletion:(downloadURL:String,imagePath:String)->Void)
     {
-        CommonUtils.sharedUtils.showProgress(self.view, label: "Registering...")
+        CommonUtils.sharedUtils.showProgress(self.view, label: "Loading...")
         let imgData: NSData = UIImageJPEGRepresentation(imgProfile.image!, 0.7)!
         let imgPath = "images/\(NSDate().timeIntervalSince1970).jpg"
         // Create a reference to the file you want to upload
@@ -298,13 +288,13 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
             }
         }
         
-//        uploadTask.observeStatus(.Progress) { snapshot in
-//            // Upload reported progress
-//            if let progress = snapshot.progress {
-//                let percentComplete = 100.0 * Double(progress.completedUnitCount) / Double(progress.totalUnitCount)
-//                print(percentComplete)
-//            }
-//        }
+        //        uploadTask.observeStatus(.Progress) { snapshot in
+        //            // Upload reported progress
+        //            if let progress = snapshot.progress {
+        //                let percentComplete = 100.0 * Double(progress.completedUnitCount) / Double(progress.totalUnitCount)
+        //                print(percentComplete)
+        //            }
+        //        }
     }
     
     
@@ -436,3 +426,4 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
         }
     }
 }
+
