@@ -9,12 +9,14 @@
 import UIKit
 import CoreLocation
 import MapKit
-
 import Firebase
+import SDWebImage
+import UIActivityIndicator_for_SDWebImage
 
 class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
 
     @IBOutlet var btnCurrentLocation: UIButton!
+    @IBOutlet weak var findRangeSC: UISegmentedControl!
     @IBOutlet weak var mvLocation: MKMapView!
     @IBOutlet weak var cvGames: UICollectionView!
     
@@ -28,6 +30,8 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
     @IBOutlet var lblTime: UILabel!
     @IBOutlet var lblLocation: UILabel!
     @IBOutlet var lblDescription: UILabel!
+    @IBOutlet var btnJoinGame: UIButton!
+    @IBOutlet weak var cvUserThisGame: UICollectionView!
     
     var ref:FIRDatabaseReference = FIRDatabase.database().reference()
     var geocoder = CLGeocoder()
@@ -40,6 +44,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
     
     var isRefreshingData = false
     var filterWithKm = 20
+    var PlayerInGame:Array<String> = []
     
     private var currentPage: Int = 1
     private var pageSize: CGSize {
@@ -65,6 +70,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         layout.scrollDirection = .Horizontal
         
         btnCurrentLocation.setCornerRadious(btnCurrentLocation.frame.size.width/2)
+        btnJoinGame.setCornerRadious(2)
         
         self.initLocationManager()
         if CLocation.coordinate.latitude != 0 {
@@ -105,7 +111,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
             //self.tblGroups.reloadData()
             for child in snapshot.children {
                 
-                var placeDict = Dictionary<String,String>()
+                var placeDict = Dictionary<String,AnyObject>()
                 let childDict = child.valueInExportFormat() as! NSDictionary
                 //print(childDict)
                 
@@ -117,34 +123,26 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
                     } else if let keyValue = childDict.valueForKey(stringKey) as? Double {
                         placeDict[stringKey] = "\(keyValue)"
                     }
+                    else if let keyValue = childDict.valueForKey(stringKey) as? Dictionary<String,AnyObject> {
+                        placeDict[stringKey] = keyValue
+                    }
+                    else if let keyValue = childDict.valueForKey(stringKey) as? NSDictionary {
+                        placeDict[stringKey] = keyValue
+                    }
                     
                 }
                 placeDict["key"] = child.key
                 
                 let group = child.childSnapshotForPath("groupName").value
-                let groupString = group as! String!
-                print(groupString)
-                let gameNotes = child.childSnapshotForPath("gameNotes").value
-                let gameNotesString = gameNotes as! String!
-                print(gameNotesString)
+                let groupString = group as? String ?? ""
                 let lat = child.childSnapshotForPath("lat").value
                 let userLat = lat as! Double!
-                print(userLat)
                 let long = child.childSnapshotForPath("long").value
                 let userLong = long as! Double!
-                print(userLong)
-                let sport = child.childSnapshotForPath("sport").value
-                let sportGame = sport as! String!
-                print(sportGame)
-                let skill = child.childSnapshotForPath("skillLevel").value
-                let skillLevel = skill as! String!
-                print(skillLevel)
-                let gameCreator = child.childSnapshotForPath("gameCreator").value
-                let gameCreatorString = gameCreator as! String!
-                print(gameCreatorString)
-                let timestamp = child.childSnapshotForPath("timestamp").value
-                let timestampString = timestamp as! Double!
-                print(timestampString)
+                
+//                let timestamp = child.childSnapshotForPath("timestamp").value
+//                let timestampString = timestamp as! Double!
+//                print(timestampString)
                 
                 let geoCoder = CLGeocoder()
                 let location = CLLocation(latitude: userLat, longitude: userLong)
@@ -212,9 +210,9 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         } else {
             
             //Filter data with limit
-            filteredPlaces = places.filter({ (game:[String : String]) -> Bool in
-                if let lat = (game["lat"])?.toDouble(),
-                    long = (game["long"])?.toDouble()
+            filteredPlaces = places.filter({ (game:[String : AnyObject]) -> Bool in
+                if let lat = (game["lat"] as? String)?.toDouble(),
+                    long = (game["long"] as? String)?.toDouble()
                 {
                     let loc1 = CLLocation(latitude: lat, longitude: long)
                     let distanceInMeters = currentLocation?.distanceFromLocation(loc1) ?? 0
@@ -228,11 +226,11 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         
         //Sort Data
         if currentLocation != nil && places.count > 0 {
-            filteredPlaces = filteredPlaces.sort({ (game1:[String : String], game2:[String : String]) -> Bool in
-                if let lat1 = (game1["lat"])?.toDouble(),
-                    long1 = (game1["long"])?.toDouble(),
-                    lat2 = (game2["lat"])?.toDouble(),
-                    long2 = (game2["long"])?.toDouble()
+            filteredPlaces = filteredPlaces.sort({ (game1:[String : AnyObject], game2:[String : AnyObject]) -> Bool in
+                if let lat1 = (game1["lat"] as? String)?.toDouble(),
+                    long1 = (game1["long"] as? String)?.toDouble(),
+                    lat2 = (game2["lat"] as? String)?.toDouble(),
+                    long2 = (game2["long"] as? String)?.toDouble()
                 {
                     let loc1 = CLLocation(latitude: lat1, longitude: long1)
                     let loc2 = CLLocation(latitude: lat2, longitude: long2)
@@ -248,16 +246,19 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         cvGames.reloadData()
     }
     
-    func ShowFilteredGamePlace() {
+    func ShowFilteredGamePlace()
+    {
+        mvLocation.removeAnnotations(mvLocation.annotations)
+        
         for (index, element) in filteredPlaces.enumerate()
         {
             //print("Item \(index): \(element)")
-            let latitude = NSString(string: element["lat"]!).doubleValue
-            let longitude = NSString(string: element["long"]!).doubleValue
+            let latitude = NSString(string: element["lat"] as? String ?? "0").doubleValue
+            let longitude = NSString(string: element["long"] as? String ?? "0").doubleValue
             let coordinate = CLLocationCoordinate2DMake(latitude, longitude)
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
-            annotation.title = element["title"]
+            annotation.title = element["title"] as? String ?? ""
             self.mvLocation.addAnnotation(annotation)
         }
         
@@ -269,6 +270,30 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         let span:MKCoordinateSpan = MKCoordinateSpanMake(latDelta, lonDelta)
         let region:MKCoordinateRegion = MKCoordinateRegionMake(CLocation.coordinate, span)
         self.mvLocation.setRegion(region, animated: false)
+    }
+    
+    @IBAction func findRangeChanged(sender: UISegmentedControl) {
+        switch findRangeSC.selectedSegmentIndex
+        {
+        case 0:
+            filterWithKm = 5
+            break
+        case 1:
+            filterWithKm = 10
+            break
+        case 2:
+            filterWithKm = 20
+            break
+        case 3:
+            filterWithKm = 0
+            break
+        default:
+            filterWithKm = 0
+            break;
+        }
+        self.filterData()
+        self.ShowFilteredGamePlace()
+        cvGames.reloadData()
     }
     
     @IBAction func actionGetCurrentLocation(sender: AnyObject) {
@@ -284,37 +309,126 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Set Static values 5 here for test purpose
-        return filteredPlaces.count
+        if collectionView == cvGames {
+            return filteredPlaces.count
+        } else if collectionView == cvUserThisGame {
+            return PlayerInGame.count
+        }
+        return 0
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GameNearMeCollectionViewCell.identifier, forIndexPath: indexPath) as! GameNearMeCollectionViewCell
+        if collectionView == cvGames {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GameNearMeCollectionViewCell.identifier, forIndexPath: indexPath) as! GameNearMeCollectionViewCell
+            
+            let game = filteredPlaces[indexPath.row]
+            print(game)
+            //cell.image.layer.cornerRadius = max(cell.image.frame.size.width, cell.image.frame.size.height) / 2
+            //cell.image.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.1).CGColor
+            
+            cell.imgUser1.setCornerRadious(2)
+            cell.imgUser2.setCornerRadious(2)
+            cell.imgUser3.setCornerRadious(2)
+            
+            let sport = game["sport"] as? String ?? ""
+            cell.lblSport.textColor = ((sport == sportArray[0]) ? clrGreen : ((sport == sportArray[1]) ? clrOrange : ((sport == sportArray[2]) ? clrRed : clrPurple)))
+            
+            cell.lblSport.text = game["sport"] as? String ?? ""
+            cell.lblGameName.text = game["groupName"] as? String ?? ""
+            cell.lblDate.text = (game["startTimestamp"] as? String ?? "1").asDateUTC?.strDateInUTC
+            cell.lblTime.text = game["endTimestamp"] as? String ?? ""
+            //cell.lblMoreCount.text = "2+"
+            
+            cell.selectedBackgroundView = nil
+            
+            var PlayerInThisGame:Array<String> = []
+            if let players = game["players"] as? Dictionary<String,AnyObject>
+                //where players.convertToDictionary() != nil
+            {
+                for key : String in Array(players.keys) {
+                    PlayerInThisGame.append(key)
+                }
+                print(" index : \(indexPath.row) Player in game : \(PlayerInThisGame.count) ")
+                
+                if PlayerInThisGame.count >= 1 {
+                    cell.imgUser1.hidden = false
+                    loadUserImageToImageView(cell.imgUser1, uid: PlayerInThisGame[0])
+                } else {
+                    cell.imgUser1.hidden = true
+                }
+                if PlayerInThisGame.count >= 2 {
+                    cell.imgUser2.hidden = false
+                    loadUserImageToImageView(cell.imgUser2, uid: PlayerInThisGame[1])
+                } else {
+                    cell.imgUser2.hidden = true
+                }
+                if PlayerInThisGame.count >= 3 {
+                    cell.imgUser3.hidden = false
+                    cell.lblMoreCount.hidden = false
+                } else {
+                    cell.imgUser3.hidden = true
+                    cell.lblMoreCount.hidden = true
+                    cell.lblMoreCount.text = "+\(PlayerInThisGame.count-2)"
+                }
+            } else {
+                cell.imgUser1.hidden = true
+                cell.imgUser2.hidden = true
+                cell.imgUser3.hidden = true
+                cell.lblMoreCount.hidden = true
+            }
+
+            return cell
+        }
+        else
+        {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PlayerInGameCollectionViewCell.identifier, forIndexPath: indexPath) as! PlayerInGameCollectionViewCell
+            
+            let game = filteredPlaces[indexPath.row]
+            print(game)
+            //cell.image.layer.cornerRadius = max(cell.image.frame.size.width, cell.image.frame.size.height) / 2
+            //cell.image.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.1).CGColor
+            
+            loadUserImageToImageView(cell.imgPlayer, uid: PlayerInGame[indexPath.row])
+            
+            cell.selectedBackgroundView = nil
+            
+            return cell
+        }
         
-        let game = filteredPlaces[indexPath.row]
-        print(game)
-        //cell.image.layer.cornerRadius = max(cell.image.frame.size.width, cell.image.frame.size.height) / 2
-        //cell.image.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.1).CGColor
-        
-        let sport = game["sport"] ?? ""
-        cell.lblSport.textColor = ((sport == sportArray[0]) ? clrGreen : ((sport == sportArray[1]) ? clrOrange : ((sport == sportArray[2]) ? clrRed : clrPurple)))
-        
-        cell.lblSport.text = game["sport"] ?? ""
-        cell.lblGameName.text = game["groupName"] ?? ""
-        cell.lblDate.text = (game["startTimestamp"] ?? "1").asDateUTC?.strDateInUTC
-        cell.lblTime.text = game["endTimestamp"] ?? ""
-        //cell.lblMoreCount.text = "2+"
-        
-        cell.selectedBackgroundView = nil
-        
-        return cell
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         collectionView.deselectItemAtIndexPath(indexPath, animated: true)
-        ShowGameDetail(filteredPlaces[indexPath.row])
+        if collectionView == cvGames {
+            selectedGame = filteredPlaces[indexPath.row]
+            ShowGameDetail(filteredPlaces[indexPath.row])
+        } else if collectionView == cvUserThisGame {
+            
+        }
     }
     
+    func loadUserImageToImageView(imgUser:UIImageView,uid:String) {
+        ref.child("users").child(uid).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            
+            if let userProfile = snapshot.value!["userProfile"] as? String {
+                let userProfileNSURL = NSURL(string: "\(userProfile)")
+                imgUser.setImageWithURL(userProfileNSURL, placeholderImage: UIImage(named: "placeholder"), options: SDWebImageOptions.AllowInvalidSSLCertificates, usingActivityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+            }
+            else if let facebookData = snapshot.value!["facebookData"] as? NSDictionary
+                where facebookData["profilePhotoURL"] != nil
+            {
+                let userProfileNSURL = NSURL(string: "\(facebookData["profilePhotoURL"] as? String ?? "")")
+                imgUser.setImageWithURL(userProfileNSURL, placeholderImage: UIImage(named: "placeholder"), options: SDWebImageOptions.AllowInvalidSSLCertificates, usingActivityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+            }
+            else {
+                //print("No Profile Picture")
+            }
+        })
+        { (error) in
+            print(error.localizedDescription)
+        }
+    }
     
     // MARK: - UIScrollViewDelegate
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
@@ -326,8 +440,8 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         print("currentPage = \(currentPage)")
         
         let game = filteredPlaces[currentPage]
-        let lat = Double(game["lat"] ?? "1") ?? 0
-        let long = Double(game["long"] ?? "1") ?? 0
+        let lat = Double(game["lat"] as? String ?? "1") ?? 0
+        let long = Double(game["long"] as? String ?? "1") ?? 0
         
         let center = CLLocationCoordinate2D(latitude: lat, longitude: long)
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
@@ -426,22 +540,68 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         }
     }
     
-    func ShowGameDetail(game:Dictionary<String,String>)
+    func ShowGameDetail(game:Dictionary<String,AnyObject>)
     {
         UIView.animateWithDuration(0.5, animations: {
             self.vOverlay.alpha = 1
         })
-        
         print(game)
         
-        lblSport.text = game["sport"] ?? ""
-        lblGameName.text = game["groupName"] ?? ""
-        lblDate.text = (game["startTimestamp"] ?? "1").asDateUTC?.strDateInUTC
-        lblTime.text = game["endTimestamp"] ?? ""
-        lblSport.text = game["sport"] ?? ""
-        lblLocation.text = game["Address"] ?? ""
-        lblDescription.text = game["gameNotes"] ?? ""
+        lblSport.text = game["sport"] as? String ?? ""
+        lblGameName.text = game["groupName"] as? String ?? ""
+        lblDate.text = (game["startTimestamp"] as? String)?.asDateFromMiliseconds?.formattedWith()
+        lblTime.text = game["endTimestamp"] as? String ?? ""
+        lblSport.text = game["sport"] as? String ?? ""
+        lblLocation.text = game["Address"] as? String ?? ""
+        lblDescription.text = game["gameNotes"] as? String ?? ""
         
+        
+        btnJoinGame.setBorder(0, color: clrGreen)
+        btnJoinGame.backgroundColor = clrGreen
+        btnJoinGame.setTitle("Join Game", forState: .Normal)
+        btnJoinGame.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        btnJoinGame.setCornerRadious(2)
+        btnJoinGame.userInteractionEnabled = true
+
+        PlayerInGame.removeAll()
+        if let players = game["players"] as? Dictionary<String,AnyObject>
+            //where players.convertToDictionary() != nil
+        {
+            //let playersDict = players.convertToDictionary()!
+            if let joinData = players[myUserID!] {
+                print(joinData)
+                btnJoinGame.setTitle("Already Joined", forState: .Normal)
+                btnJoinGame.setBorder(2, color: clrGreen)
+                btnJoinGame.setTitleColor(clrGreen, forState: .Normal)
+                btnJoinGame.backgroundColor = UIColor.whiteColor()
+                btnJoinGame.setCornerRadious(2)
+                btnJoinGame.userInteractionEnabled = false
+            }
+            
+            for key : String in Array(players.keys) {
+                PlayerInGame.append(key)
+            }
+            print(PlayerInGame)
+            self.cvUserThisGame.reloadData()
+        }
+    }
+    
+    @IBAction func joinGameButton(sender: AnyObject) {
+        
+        
+        let timestamp = NSDate().timeIntervalSince1970
+        let enrollGame:[String:AnyObject] = ["joinedAt": timestamp, "uid": myUserID!]
+        print(enrollGame,selectedGame)
+        
+        CommonUtils.sharedUtils.showProgress(self.view, label: "Joining..")
+        ref.child("games").child("active").child(selectedGame["key"] as? String ?? "").child("players").child(myUserID!).updateChildValues(enrollGame) { (error, ref) in
+            CommonUtils.sharedUtils.hideProgress()
+            if error == nil {
+                CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "You Joined successfully!")
+            } else {
+                CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Opps,we are uable to join you in game!")
+            }
+        }
     }
     
 }

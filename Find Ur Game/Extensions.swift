@@ -39,11 +39,13 @@ extension UIView {
         self.layer.borderColor = color.CGColor
         self.layer.borderWidth = width
         self.layer.masksToBounds = true
+        self.clipsToBounds = true
     }
     public func setCornerRadious(radious:CGFloat = 4)
     {
         self.layer.cornerRadius = radious ?? 4
         self.layer.masksToBounds = true
+        self.clipsToBounds = true
     }
 }
 
@@ -109,9 +111,18 @@ extension NSDate {
         Formatter.customUTC.timeZone = NSTimeZone(name: "UTC")
         return Formatter.customUTC.stringFromDate(self)
     }
+    func formattedWith(format:String? = "dd MMM yyyy")-> String {
+        let formatter = NSDateFormatter()
+        //formatter.timeZone = NSTimeZone(forSecondsFromGMT: 0)  // you can set GMT time
+        formatter.timeZone = NSTimeZone.localTimeZone()        // or as local time
+        formatter.dateFormat = format
+        return formatter.stringFromDate(self)
+    }
 }
 
 extension String {
+    
+
     var asDateLocal: NSDate? {
         return NSDate.Formatter.custom.dateFromString(self)
     }
@@ -121,6 +132,23 @@ extension String {
     }
     func asDateFormatted(with dateFormat: String) -> NSDate? {
         return NSDateFormatter(dateFormat: dateFormat).dateFromString(self)
+    }
+    var asDateFromMiliseconds: NSDate? {
+        if let interval = Double(self) {
+            return NSDate.init(timeIntervalSince1970: interval)
+        }
+        return nil
+    }
+    
+    func convertToDictionary() -> [String:AnyObject]? {
+        if let data = self.dataUsingEncoding(NSUTF8StringEncoding) {
+            do {
+                return try NSJSONSerialization.JSONObjectWithData(data, options: [.AllowFragments]) as? [String:AnyObject]
+            } catch let error as NSError {
+                print(error)
+            }
+        }
+        return nil
     }
 }
 

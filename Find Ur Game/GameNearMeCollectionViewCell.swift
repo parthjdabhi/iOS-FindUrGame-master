@@ -17,6 +17,7 @@ class GameNearMeCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var imgUser1: UIImageView!
     @IBOutlet weak var imgUser2: UIImageView!
+    @IBOutlet weak var imgUser3: UIImageView!
     @IBOutlet weak var lblMoreCount: UILabel!
     
     static let identifier = "GameNearMeCollectionViewCell"

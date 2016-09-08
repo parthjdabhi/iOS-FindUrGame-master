@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
+import FBSDKLoginKit
 import SDWebImage
 import UIActivityIndicator_for_SDWebImage
 
@@ -52,7 +54,7 @@ class MyProfileViewController: UIViewController {
         imgProfile.setBorder(0.5, color: UIColor.blackColor())
         
         print(myUserID)
-        ref.child("users").child(myUserID!).observeEventType(.Value, withBlock: { (snapshot) in
+        ref.child("users").child(myUserID!).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
             AppState.sharedInstance.currentUser = snapshot
             let userFirstName = snapshot.value!["userFirstName"] as? String ?? ""
             let userLastName = snapshot.value!["userLastName"] as? String ?? ""
@@ -145,6 +147,7 @@ class MyProfileViewController: UIViewController {
             
             let firebaseAuth = FIRAuth.auth()
             do {
+                FBSDKLoginManager().logOut()
                 try firebaseAuth?.signOut()
                 AppState.sharedInstance.signedIn = false
             } catch let signOutError as NSError {

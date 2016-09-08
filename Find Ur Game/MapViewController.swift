@@ -40,7 +40,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
         
-        if activePlace == -1 {
+        if manager != nil {
             
             manager.requestWhenInUseAuthorization()
             manager.startUpdatingLocation()
@@ -50,8 +50,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             for (index, element) in filteredPlaces.enumerate()
             {
                 //print("Item \(index): \(element)")
-                let latitude = NSString(string: element["lat"]!).doubleValue
-                let longitude = NSString(string: element["long"]!).doubleValue
+                let latitude = NSString(string: element["lat"] as? String ?? "0").doubleValue
+                let longitude = NSString(string: element["long"] as? String ?? "0").doubleValue
                 let coordinate = CLLocationCoordinate2DMake(latitude, longitude)
                 let latDelta:CLLocationDegrees = 0.01
                 let lonDelta:CLLocationDegrees = 0.01
@@ -60,7 +60,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                 self.map.setRegion(region, animated: true)
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = coordinate
-                annotation.title = element["title"]
+                annotation.title = element["title"] as? String ?? ""
                 self.map.addAnnotation(annotation)
                 
 //                let annotation1 = Annotation()
@@ -71,8 +71,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
 //                self.map.addAnnotation(annotation1)
             }
             
-            let latitude = NSString(string: filteredPlaces[activePlace]["lat"]!).doubleValue
-            let longitude = NSString(string: filteredPlaces[activePlace]["long"]!).doubleValue
+            let latitude = NSString(string: filteredPlaces[0]["lat"] as? String ?? "0").doubleValue
+            let longitude = NSString(string: filteredPlaces[0]["long"] as? String ?? "0").doubleValue
             let coordinate = CLLocationCoordinate2DMake(latitude, longitude)
             let latDelta:CLLocationDegrees = 0.05
             let lonDelta:CLLocationDegrees = 0.05

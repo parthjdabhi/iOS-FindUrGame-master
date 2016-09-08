@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		074653A89B58EFF43D9D45D5 /* Pods_Find_Ur_Game.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D856C18CEE5C34D32A6970B7 /* Pods_Find_Ur_Game.framework */; };
+		5E0792F11D81AC9C00CA4895 /* PlayerInGameCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0792F01D81AC9C00CA4895 /* PlayerInGameCollectionViewCell.swift */; };
 		5E502DA71D7E860000A138DE /* MyTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E502DA61D7E860000A138DE /* MyTabBarViewController.swift */; };
 		5E502DAF1D7E868000A138DE /* ESTabBarBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E502DA91D7E868000A138DE /* ESTabBarBadge.swift */; };
 		5E502DB01D7E868000A138DE /* ESTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E502DAA1D7E868000A138DE /* ESTabBarController.swift */; };
@@ -83,6 +84,7 @@
 
 /* Begin PBXFileReference section */
 		3E5744C6D2F31946FC108F9A /* Pods-Find Ur Game.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Find Ur Game.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Find Ur Game/Pods-Find Ur Game.debug.xcconfig"; sourceTree = "<group>"; };
+		5E0792F01D81AC9C00CA4895 /* PlayerInGameCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerInGameCollectionViewCell.swift; sourceTree = "<group>"; };
 		5E502DA61D7E860000A138DE /* MyTabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTabBarViewController.swift; sourceTree = "<group>"; };
 		5E502DA91D7E868000A138DE /* ESTabBarBadge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ESTabBarBadge.swift; sourceTree = "<group>"; };
 		5E502DAA1D7E868000A138DE /* ESTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ESTabBarController.swift; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 				5EED819F1D7DA0B40000EAD9 /* FindGameViewController.swift */,
 				5EED81A11D7DA0D20000EAD9 /* MyProfileViewController.swift */,
 				5E654A171D803EAB00516C1D /* GameNearMeCollectionViewCell.swift */,
+				5E0792F01D81AC9C00CA4895 /* PlayerInGameCollectionViewCell.swift */,
 			);
 			name = "Tab Bar VCs";
 			sourceTree = "<group>";
@@ -564,6 +567,7 @@
 				DA00F7FC1D6BABB1009BE915 /* JoinGameViewController.swift in Sources */,
 				5E502DB81D7E86C500A138DE /* BackgroundStyleAnimator.swift in Sources */,
 				5E502DB11D7E868000A138DE /* ESTabBarItem.swift in Sources */,
+				5E0792F11D81AC9C00CA4895 /* PlayerInGameCollectionViewCell.swift in Sources */,
 				DA00F7F21D6983AB009BE915 /* SharedCode.swift in Sources */,
 				DA8BEC1E1D6798D800C8E142 /* CreateGameViewController.swift in Sources */,
 				DA8B4B951D57D73300F56470 /* Find_Ur_Game.xcdatamodeld in Sources */,

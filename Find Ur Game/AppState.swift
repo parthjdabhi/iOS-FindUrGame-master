@@ -27,6 +27,10 @@ let myUserID = {
     return FIRAuth.auth()?.currentUser?.uid
 }()
 
+var places:[Dictionary<String,AnyObject>] = []
+var filteredPlaces:[Dictionary<String,AnyObject>] = []
+var selectedGame: Dictionary<String,AnyObject> = [:]
+
 //Global Data
 var CLocation:CLLocation = CLLocation()
 var CLocationPlace:String = String()

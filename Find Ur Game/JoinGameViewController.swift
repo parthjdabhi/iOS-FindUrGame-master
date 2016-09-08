@@ -31,7 +31,7 @@ class JoinGameViewController: UIViewController {
         btnJoin.hidden = true
         
         ref = FIRDatabase.database().reference()
-        ref.child("players").child(filteredPlaces[activePlace]["key"] ?? "").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+        ref.child("players").child(filteredPlaces[0]["key"] as? String ?? "").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
             var isJoined = false
             for child in snapshot.children {
                 var userDict = Dictionary<String,String>()
@@ -53,11 +53,11 @@ class JoinGameViewController: UIViewController {
         })
         
         var descString = ""
-        if let groupName = filteredPlaces[activePlace]["groupName"] {
+        if let groupName = filteredPlaces[0]["groupName"] {
             descString += "Name of Game: \(groupName) \n\n"
         }
         
-        if let gameNotes = filteredPlaces[activePlace]["gameNotes"] {
+        if let gameNotes = filteredPlaces[0]["gameNotes"] {
             descString += "Game Notes: \(gameNotes) \n"
         }
 
@@ -77,7 +77,7 @@ class JoinGameViewController: UIViewController {
         
         CommonUtils.sharedUtils.showProgress(self.view, label: "Joining..")
         let enroll:[String:AnyObject] = ["uid":(FIRAuth.auth()?.currentUser?.uid ?? ""), "name" : "\((FIRAuth.auth()?.currentUser?.displayName ?? "My Name"))"];
-        ref.child("players").child(filteredPlaces[activePlace]["key"] ?? "").child(FIRAuth.auth()?.currentUser?.uid ?? "").setValue(enroll) { (error, ref) in
+        ref.child("players").child(filteredPlaces[0]["key"] as? String ?? "").child(FIRAuth.auth()?.currentUser?.uid ?? "").setValue(enroll) { (error, ref) in
             CommonUtils.sharedUtils.hideProgress()
             if error == nil {
                 self.navigationController?.popViewControllerAnimated(true)
@@ -86,10 +86,7 @@ class JoinGameViewController: UIViewController {
             }
         }
         
-        func signedIn(user: FIRUser?) {
-            let mainScreenViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MainScreenViewController") as! MainScreenViewController!
-            self.navigationController?.pushViewController(mainScreenViewController, animated: true)
-        }
+        
     }
     
     // MARK: - Table view data source

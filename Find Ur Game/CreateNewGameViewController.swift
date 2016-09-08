@@ -155,13 +155,11 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
 //            return
 //        }
         
-        let MyUserID = FIRAuth.auth()?.currentUser?.uid
         let timestamp = NSDate().timeIntervalSince1970
-        
         let startTimestamp = (txtDate?.date ?? NSDate()).timeIntervalSince1970
         //let endTimestamp = (txtEndDate?.date ?? NSDate()).timeIntervalSince1970
         
-        let game:[NSObject : AnyObject] = ["locName":self.txtLocation.text!,"sport":sportAnswer, "lat": selectedLocation!.coordinate.latitude, "long": selectedLocation!.coordinate.longitude, "gameCreator": MyUserID!, "skillLevel": skillAnswer, "groupName": txtGameName.text!, "gameNotes": tvDescription.text, "timestamp": timestamp, "startTimestamp": startTimestamp, "endTimestamp": txtTimeRange?.text ?? ""]
+        let game:[NSObject : AnyObject] = ["locName":self.txtLocation.text!,"sport":sportAnswer, "lat": selectedLocation!.coordinate.latitude, "long": selectedLocation!.coordinate.longitude, "gameCreator": myUserID!, "skillLevel": skillAnswer, "groupName": txtGameName.text!, "gameNotes": tvDescription.text, "timestamp": timestamp, "startTimestamp": startTimestamp, "endTimestamp": txtTimeRange?.text ?? ""]
         print(game)
         
         CommonUtils.sharedUtils.showProgress(self.view, label: "Loading..")
