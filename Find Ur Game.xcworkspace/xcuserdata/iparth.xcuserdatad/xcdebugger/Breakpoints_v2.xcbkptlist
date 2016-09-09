@@ -41,22 +41,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Find Ur Game/MyProfileViewController.swift"
-            timestampString = "495036285.677935"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
-            landmarkName = "SportAction(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Find Ur Game/FindGameViewController.swift"
             timestampString = "495038128.820288"
             startingColumnNumber = "9223372036854775807"
@@ -90,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Find Ur Game/SignUpViewController.swift"
-            timestampString = "494940027.758859"
+            timestampString = "495109758.108868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "234"
-            endingLineNumber = "234"
+            startingLineNumber = "354"
+            endingLineNumber = "354"
             landmarkName = "saveProfile(_:imgPath:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -106,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Find Ur Game/SignUpViewController.swift"
-            timestampString = "494941128.214611"
+            timestampString = "495109758.108868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
+            startingLineNumber = "401"
+            endingLineNumber = "401"
             landmarkName = "saveImage(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -122,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Find Ur Game/SignUpViewController.swift"
-            timestampString = "494940027.758859"
+            timestampString = "495109758.108868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
             landmarkName = "createProfile(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -154,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Find Ur Game/SignupFBViewController.swift"
-            timestampString = "494940622.263033"
+            timestampString = "495109758.108868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
             landmarkName = "viewDidLoad()"
             landmarkType = "5">
          </BreakpointContent>
@@ -170,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Find Ur Game/SignUpViewController.swift"
-            timestampString = "494940955.06411"
+            timestampString = "495109758.108868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
+            startingLineNumber = "378"
+            endingLineNumber = "378"
             landmarkName = "saveProfile(_:imgPath:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -186,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Find Ur Game/SignUpViewController.swift"
-            timestampString = "494940959.716631"
+            timestampString = "495109758.108868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
+            startingLineNumber = "363"
+            endingLineNumber = "363"
             landmarkName = "saveProfile(_:imgPath:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -234,7 +218,7 @@
                   moduleName = "Find Ur Game"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/iparth/Desktop/iWork/Dustin%20Allen%20-%20Harloch/5%20Find-Ur-Game/24Aug%2011am%20Starts%20from/iOS-FindUrGame-master/Find%20Ur%20Game/FirebaseSignInViewController.swift"
-                  timestampString = "495042500.681033"
+                  timestampString = "495098521.448289"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "134"
@@ -249,7 +233,7 @@
                   moduleName = "Find Ur Game"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/iparth/Desktop/iWork/Dustin%20Allen%20-%20Harloch/5%20Find-Ur-Game/24Aug%2011am%20Starts%20from/iOS-FindUrGame-master/Find%20Ur%20Game/FirebaseSignInViewController.swift"
-                  timestampString = "495042500.681189"
+                  timestampString = "495098521.448495"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "135"
@@ -282,11 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Find Ur Game/SignupFBViewController.swift"
-            timestampString = "494953647.385718"
+            timestampString = "495109758.108868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "225"
-            endingLineNumber = "225"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
             landmarkName = "createProfile(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -433,38 +417,22 @@
             endingLineNumber = "346"
             landmarkName = "collectionView(_:cellForItemAtIndexPath:)"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Find_Ur_Game.FindGameViewController.collectionView (__ObjC.UICollectionView, cellForItemAtIndexPath : __ObjC.NSIndexPath) -&gt; __ObjC.UICollectionViewCell"
-                  moduleName = "Find Ur Game"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/iparth/Desktop/iWork/Dustin%20Allen%20-%20Harloch/5%20Find-Ur-Game/24Aug%2011am%20Starts%20from/iOS-FindUrGame-master/Find%20Ur%20Game/FindGameViewController.swift"
-                  timestampString = "495042500.649978"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "342"
-                  endingLineNumber = "342"
-                  offsetFromSymbolStart = "6624">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Find_Ur_Game.FindGameViewController.collectionView (__ObjC.UICollectionView, cellForItemAtIndexPath : __ObjC.NSIndexPath) -&gt; __ObjC.UICollectionViewCell"
-                  moduleName = "Find Ur Game"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/iparth/Desktop/iWork/Dustin%20Allen%20-%20Harloch/5%20Find-Ur-Game/24Aug%2011am%20Starts%20from/iOS-FindUrGame-master/Find%20Ur%20Game/FindGameViewController.swift"
-                  timestampString = "495042500.650306"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "342"
-                  endingLineNumber = "342"
-                  offsetFromSymbolStart = "6929">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Find Ur Game/SignUpViewController.swift"
+            timestampString = "495109758.108868"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
+            landmarkName = "actionCloseSkillLevelView(_:)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

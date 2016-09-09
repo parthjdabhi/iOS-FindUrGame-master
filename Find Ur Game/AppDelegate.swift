@@ -156,11 +156,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let loginManager: FBSDKLoginManager = FBSDKLoginManager()
         loginManager.logOut()
         
-        let credential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString)
-        
-        FIRAuth.auth()?.signInWithCredential(credential) { (user, error) in
+        //let credential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString)
+        //FIRAuth.auth()?.signInWithCredential(credential) { (user, error) in
             // ...
-        }
+        //}
         
         self.saveContext()
     }

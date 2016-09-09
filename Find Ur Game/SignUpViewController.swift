@@ -32,18 +32,32 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
     @IBOutlet var vBasketball: UIView!
     @IBOutlet var btnBasketball: UIButton!
     @IBOutlet var lblBasketball: UILabel!
+    @IBOutlet var lblSkillBasketball: UILabel!
     
     @IBOutlet var vSoccer: UIView!
     @IBOutlet var btnSoccer: UIButton!
     @IBOutlet var lblSoccer: UILabel!
+    @IBOutlet var lblSkillSoccer: UILabel!
     
     @IBOutlet var vBaseball: UIView!
     @IBOutlet var btnBaseball: UIButton!
     @IBOutlet var lblBaseball: UILabel!
+    @IBOutlet var lblSkillBaseball: UILabel!
     
     @IBOutlet var vVoleyball: UIView!
     @IBOutlet var btnVoleyball: UIButton!
     @IBOutlet var lblVoleyball: UILabel!
+    @IBOutlet var lblSkillVoleyball: UILabel!
+    
+    @IBOutlet var vExpLevelOverlay: UIView!
+    @IBOutlet var vExpLevel: UIView!
+    @IBOutlet var btnCloseSkillLevelView: UIButton!
+    @IBOutlet var lblSkillForSport: UILabel!
+    @IBOutlet var btnExpNoExp: UIButton!
+    @IBOutlet var btnExpRecreational: UIButton!
+    @IBOutlet var btnExpHighSchool: UIButton!
+    @IBOutlet var btnExpCollege: UIButton!
+    @IBOutlet var btnExpPro: UIButton!
     
     var imgTaken = false
     var finalFeet:String = ""
@@ -52,9 +66,9 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
     var pickOptionFeet:[String] = ["3'", "4'", "5'", "6'", "7'"]
     var pickOptionInch:[String] = ["1\"","2\"","3\"","4\"", "5\"", "6\"", "7\"", "8\"", "9\"", "10\"", "11\"","12\""]
     
-    var sportArray = ["Basketball", "Baseball", "Soccer", "Volleyball"]
     var sportAnswer = ""
-    
+    var skillsAnswer = ["No Experience", "No Experience", "No Experience", "No Experience"]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -86,7 +100,16 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
         weightField.setLeftMargin(8)
         
         btnBasketball.setCornerRadious(4)
-        SportAction(btnBasketball)
+        //SportAction(btnBasketball)
+        
+        self.vExpLevelOverlay.alpha = 0
+        vExpLevel.setCornerRadious(6)
+        btnExpNoExp.setCornerRadious(4)
+        btnExpHighSchool.setCornerRadious(4)
+        btnExpCollege.setCornerRadious(4)
+        btnExpRecreational.setCornerRadious(4)
+        btnExpPro.setCornerRadious(4)
+        btnCloseSkillLevelView.setCornerRadious(btnCloseSkillLevelView.frame.width/2)
         
         let pickerView = UIPickerView()
         pickerView.delegate = self
@@ -175,23 +198,120 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
         
         if sender == btnBasketball {
             sportAnswer = sportArray[0]
-            vBasketball.backgroundColor = clrBlackSelected
-            lblBasketball.textColor = UIColor.whiteColor()
+            //vBasketball.backgroundColor = clrBlackSelected
+            //lblBasketball.textColor = UIColor.whiteColor()
+            ShowGameDetail(sportAnswer, index: 0)
         } else if sender == btnBaseball {
             sportAnswer = sportArray[1]
-            vBaseball.backgroundColor = clrBlackSelected
-            lblBaseball.textColor = UIColor.whiteColor()
+            //vBaseball.backgroundColor = clrBlackSelected
+            //lblBaseball.textColor = UIColor.whiteColor()
+            ShowGameDetail(sportAnswer, index: 1)
         } else if sender == btnSoccer {
             sportAnswer = sportArray[2]
-            vSoccer.backgroundColor = clrBlackSelected
-            lblSoccer.textColor = UIColor.whiteColor()
+            //vSoccer.backgroundColor = clrBlackSelected
+            //lblSoccer.textColor = UIColor.whiteColor()
+            ShowGameDetail(sportAnswer, index: 2)
         } else if sender == btnVoleyball {
             sportAnswer = sportArray[3]
-            vVoleyball.backgroundColor = clrBlackSelected
-            lblVoleyball.textColor = UIColor.whiteColor()
+            //vVoleyball.backgroundColor = clrBlackSelected
+            //lblVoleyball.textColor = UIColor.whiteColor()
+            ShowGameDetail(sportAnswer, index: 3)
         }
     }
     
+    
+    // MARK: - Game Detail View
+    @IBAction func actionCloseSkillLevelView(sender: AnyObject)
+    {
+        UIView.animateWithDuration(0.5, animations: {
+            self.vExpLevelOverlay.alpha = 0
+        }) { (completion) in
+            print(completion)
+        }
+        
+        if self.btnCloseSkillLevelView.tag == 0 {
+            self.lblSkillBasketball.text = self.skillsAnswer[0]
+        } else if self.btnCloseSkillLevelView.tag == 1 {
+            self.lblSkillBaseball.text = self.skillsAnswer[1]
+        } else if self.btnCloseSkillLevelView.tag == 2 {
+            self.lblSkillSoccer.text = self.skillsAnswer[2]
+        } else if self.btnCloseSkillLevelView.tag == 3 {
+            self.lblSkillVoleyball.text = self.skillsAnswer[3]
+        }
+    }
+    
+    func ShowGameDetail(sport:String,index:Int)
+    {
+        UIView.animateWithDuration(0.5, animations: {
+            self.vExpLevelOverlay.alpha = 1
+        })
+        print(sport)
+        
+        btnCloseSkillLevelView.tag = index
+        lblSkillForSport.text = "Select your game level for \(sport)"
+        
+        btnExpNoExp.backgroundColor = UIColor.whiteColor()
+        btnExpNoExp.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        btnExpRecreational.backgroundColor = UIColor.whiteColor()
+        btnExpRecreational.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        btnExpHighSchool.backgroundColor = UIColor.whiteColor()
+        btnExpHighSchool.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        btnExpCollege.backgroundColor = UIColor.whiteColor()
+        btnExpCollege.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        btnExpPro.backgroundColor = UIColor.whiteColor()
+        btnExpPro.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        
+        var btnSelectedSkill = btnExpNoExp
+        
+        if skillsAnswer[index] == skillsArray[0] {
+            btnSelectedSkill = btnExpNoExp
+        } else if skillsAnswer[index] == skillsArray[1] {
+            btnSelectedSkill = btnExpRecreational
+        } else if skillsAnswer[index] == skillsArray[2] {
+            btnSelectedSkill = btnExpHighSchool
+        } else if skillsAnswer[index] == skillsArray[3] {
+            btnSelectedSkill = btnExpCollege
+        } else if skillsAnswer[index] == skillsArray[4] {
+            btnSelectedSkill = btnExpPro
+        }
+        
+        btnSelectedSkill.backgroundColor = clrBlackSelected
+        btnSelectedSkill.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+    }
+    
+    @IBAction func skillLevelAction(sender: UIButton) {
+        
+        btnExpNoExp.backgroundColor = UIColor.whiteColor()
+        btnExpNoExp.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        btnExpRecreational.backgroundColor = UIColor.whiteColor()
+        btnExpRecreational.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        btnExpHighSchool.backgroundColor = UIColor.whiteColor()
+        btnExpHighSchool.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        btnExpCollege.backgroundColor = UIColor.whiteColor()
+        btnExpCollege.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        btnExpPro.backgroundColor = UIColor.whiteColor()
+        btnExpPro.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        
+        sender.backgroundColor = clrBlackSelected
+        sender.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        
+        var skill = skillsAnswer[btnCloseSkillLevelView.tag]
+        if sender == btnExpNoExp {
+            skill = "No Experience"
+        } else if sender == btnExpRecreational {
+            skill = "Recreational"
+        } else if sender == btnExpHighSchool {
+            skill = "High School"
+        } else if sender == btnExpCollege {
+            skill = "College"
+        } else if sender == btnExpPro {
+            skill = "Pro"
+        }
+        skillsAnswer[btnCloseSkillLevelView.tag] = skill
+        self.actionCloseSkillLevelView(btnCloseSkillLevelView)
+    }
+    
+    // MARK: - Create profile
     @IBAction func createProfile(sender: AnyObject)
     {
         // make sure the user entered both email & password
@@ -246,7 +366,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
                         "email": email,
                         "userProfile": ProfileUrl,
                         "userProfilePath": imgPath,
-                        "userSport": self.sportAnswer,
+                        "basketball": self.skillsAnswer[0],
+                        "baseball": self.skillsAnswer[1],
+                        "soccer": self.skillsAnswer[2],
+                        "volleyball": self.skillsAnswer[3],
                         "userPhoneNumber": self.phoneField.text ?? "",
                         "userDOB": self.dobField.text!,
                         "userHeight": self.heightField.text ?? "",
@@ -256,11 +379,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
                     self.ref.child("users").child(user!.uid).setValue(data)
                     CommonUtils.sharedUtils.hideProgress()
                     
-                    //after we directly get user picture in sign up screen
-                    //let photoViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoViewController") as! PhotoViewController!
-                    //self.navigationController?.pushViewController(photoViewController, animated: true)
-                    
                     self.navigationController?.pushViewController(MyTabBarViewController.init(), animated: true)
+                    
                 } else {
                     dispatch_async(dispatch_get_main_queue(), {() -> Void in
                         CommonUtils.sharedUtils.hideProgress()
@@ -375,6 +495,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
         return base64String
     }
     
+    /*
     @IBAction func facebookSignUp(sender: AnyObject) {
         let manager = FBSDKLoginManager()
         CommonUtils.sharedUtils.showProgress(self.view, label: "Loading...")
@@ -434,5 +555,5 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIPickerViewD
                 })
             }
         }
-    }
+    }*/
 }

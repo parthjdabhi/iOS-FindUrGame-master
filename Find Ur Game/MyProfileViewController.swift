@@ -35,6 +35,11 @@ class MyProfileViewController: UIViewController {
     @IBOutlet var btnVoleyball: UIButton!
     @IBOutlet var lblVoleyball: UILabel!
     
+    @IBOutlet var lblSkillBasketball: UILabel!
+    @IBOutlet var lblSkillSoccer: UILabel!
+    @IBOutlet var lblSkillBaseball: UILabel!
+    @IBOutlet var lblSkillVoleyball: UILabel!
+    
     var sportArray = ["Basketball", "Baseball", "Soccer", "Volleyball"]
     var sportAnswer = ""
     var ref:FIRDatabaseReference!
@@ -70,8 +75,21 @@ class MyProfileViewController: UIViewController {
             
             if let userSport = snapshot.value!["userSport"] as? String {
                 if self.sportArray.contains(userSport) {
-                    self.SportAction(((userSport == self.sportArray[0]) ? self.btnBasketball : ((userSport == self.sportArray[1]) ? self.btnBaseball : ((userSport == self.sportArray[2]) ? self.btnSoccer : self.btnVoleyball))))
+                    //self.SportAction(((userSport == self.sportArray[0]) ? self.btnBasketball : ((userSport == self.sportArray[1]) ? self.btnBaseball : ((userSport == self.sportArray[2]) ? self.btnSoccer : self.btnVoleyball))))
                 }
+            }
+            
+            if let skill = snapshot.value!["basketball"] as? String {
+                self.lblSkillBasketball.text = skill
+            }
+            if let skill = snapshot.value!["baseball"] as? String {
+                self.lblSkillBaseball.text = skill
+            }
+            if let skill = snapshot.value!["soccer"] as? String {
+                self.lblSkillSoccer.text = skill
+            }
+            if let skill = snapshot.value!["volleyball"] as? String {
+                self.lblSkillVoleyball.text = skill
             }
             
             if let userProfile = snapshot.value!["userProfile"] as? String {
@@ -110,32 +128,32 @@ class MyProfileViewController: UIViewController {
     */
     
     @IBAction func SportAction(sender: UIButton) {
-        vBasketball.backgroundColor = UIColor.whiteColor()
-        lblBasketball.textColor = UIColor.blackColor()
-        vBaseball.backgroundColor = UIColor.whiteColor()
-        lblBaseball.textColor = UIColor.blackColor()
-        vSoccer.backgroundColor = UIColor.whiteColor()
-        lblSoccer.textColor = UIColor.blackColor()
-        vVoleyball.backgroundColor = UIColor.whiteColor()
-        lblVoleyball.textColor = UIColor.blackColor()
-        
-        if sender == btnBasketball {
-            sportAnswer = sportArray[0]
-            vBasketball.backgroundColor = UIColor.blackColor()
-            lblBasketball.textColor = UIColor.whiteColor()
-        } else if sender == btnBaseball {
-            sportAnswer = sportArray[1]
-            vBaseball.backgroundColor = UIColor.blackColor()
-            lblBaseball.textColor = UIColor.whiteColor()
-        } else if sender == btnSoccer {
-            sportAnswer = sportArray[2]
-            vSoccer.backgroundColor = UIColor.blackColor()
-            lblSoccer.textColor = UIColor.whiteColor()
-        } else if sender == btnVoleyball {
-            sportAnswer = sportArray[3]
-            vVoleyball.backgroundColor = UIColor.blackColor()
-            lblVoleyball.textColor = UIColor.whiteColor()
-        }
+//        vBasketball.backgroundColor = UIColor.whiteColor()
+//        lblBasketball.textColor = UIColor.blackColor()
+//        vBaseball.backgroundColor = UIColor.whiteColor()
+//        lblBaseball.textColor = UIColor.blackColor()
+//        vSoccer.backgroundColor = UIColor.whiteColor()
+//        lblSoccer.textColor = UIColor.blackColor()
+//        vVoleyball.backgroundColor = UIColor.whiteColor()
+//        lblVoleyball.textColor = UIColor.blackColor()
+//        
+//        if sender == btnBasketball {
+//            sportAnswer = sportArray[0]
+//            vBasketball.backgroundColor = UIColor.blackColor()
+//            lblBasketball.textColor = UIColor.whiteColor()
+//        } else if sender == btnBaseball {
+//            sportAnswer = sportArray[1]
+//            vBaseball.backgroundColor = UIColor.blackColor()
+//            lblBaseball.textColor = UIColor.whiteColor()
+//        } else if sender == btnSoccer {
+//            sportAnswer = sportArray[2]
+//            vSoccer.backgroundColor = UIColor.blackColor()
+//            lblSoccer.textColor = UIColor.whiteColor()
+//        } else if sender == btnVoleyball {
+//            sportAnswer = sportArray[3]
+//            vVoleyball.backgroundColor = UIColor.blackColor()
+//            lblVoleyball.textColor = UIColor.whiteColor()
+//        }
     }
     
     @IBAction func actionLogout(sender: AnyObject)
