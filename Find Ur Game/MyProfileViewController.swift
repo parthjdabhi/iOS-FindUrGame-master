@@ -58,6 +58,9 @@ class MyProfileViewController: UIViewController {
         imgProfile.setCornerRadious(2)
         imgProfile.setBorder(0.5, color: UIColor.blackColor())
         
+        self.lblName.text = " - "
+        self.lblBodyDetails.text = " - "
+        
         print(myUserID)
         ref.child("users").child(myUserID!).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
             AppState.sharedInstance.currentUser = snapshot
@@ -65,10 +68,11 @@ class MyProfileViewController: UIViewController {
             let userLastName = snapshot.value!["userLastName"] as? String ?? ""
             let userHeight = snapshot.value!["userHeight"] as? String ?? ""
             let userWeight = snapshot.value!["userWeight"] as? String ?? ""
-//            let baseballExperience = snapshot.value!["baseball"] as! String!
-//            let basketballExperience = snapshot.value!["basketball"] as! String!
-//            let soccerExerpience = snapshot.value!["soccer"] as! String!
-//            let volleyballExperience = snapshot.value!["volleyball"] as! String!
+            
+            self.lblSkillBasketball.text = snapshot.value!["basketball"] as? String ?? "-"
+            self.lblSkillBaseball.text = snapshot.value!["baseball"] as? String ?? "-"
+            self.lblSkillSoccer.text = snapshot.value!["soccer"] as? String ?? "-"
+            self.lblSkillVoleyball.text = snapshot.value!["volleyball"] as? String ?? "-"
             
             self.lblName.text = userFirstName + " " + userLastName
             self.lblBodyDetails.text = "\(userWeight) W  -  \(userHeight) H"
@@ -77,19 +81,6 @@ class MyProfileViewController: UIViewController {
                 if self.sportArray.contains(userSport) {
                     //self.SportAction(((userSport == self.sportArray[0]) ? self.btnBasketball : ((userSport == self.sportArray[1]) ? self.btnBaseball : ((userSport == self.sportArray[2]) ? self.btnSoccer : self.btnVoleyball))))
                 }
-            }
-            
-            if let skill = snapshot.value!["basketball"] as? String {
-                self.lblSkillBasketball.text = skill
-            }
-            if let skill = snapshot.value!["baseball"] as? String {
-                self.lblSkillBaseball.text = skill
-            }
-            if let skill = snapshot.value!["soccer"] as? String {
-                self.lblSkillSoccer.text = skill
-            }
-            if let skill = snapshot.value!["volleyball"] as? String {
-                self.lblSkillVoleyball.text = skill
             }
             
             if let userProfile = snapshot.value!["userProfile"] as? String {
@@ -105,7 +96,7 @@ class MyProfileViewController: UIViewController {
             else {
                 print("No Profile Picture")
             }
-            })
+        })
         { (error) in
             print(error.localizedDescription)
         }
