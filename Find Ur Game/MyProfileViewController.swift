@@ -63,6 +63,23 @@ class MyProfileViewController: UIViewController {
         
         print(myUserID)
         ref.child("users").child(myUserID!).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            
+            if let isProfileSet = snapshot.value!["isProfileSet"] as? String?
+                where isProfileSet == nil
+            {
+                CommonUtils.sharedUtils.showProgress(self.view, label: "Signing out..")
+                signOut({ (error) in
+                    CommonUtils.sharedUtils.hideProgress()
+                    if error == nil {
+                        let loginViewController = self.storyboard?.instantiateViewControllerWithIdentifier("FirebaseSignInViewController") as! FirebaseSignInViewController!
+                        self.navigationController?.pushViewController(loginViewController, animated: true)
+                    } else {
+                        CommonUtils.sharedUtils.showAlert(self, title: "message", message: "Failed to signout, Error: \(error)")
+                    }
+                })
+                return
+            }
+            
             AppState.sharedInstance.currentUser = snapshot
             let userFirstName = snapshot.value!["userFirstName"] as? String ?? ""
             let userLastName = snapshot.value!["userLastName"] as? String ?? ""
@@ -153,21 +170,33 @@ class MyProfileViewController: UIViewController {
         actionSheetController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
         actionSheetController.addAction(UIAlertAction(title: "Logout", style: UIAlertActionStyle.Destructive, handler: { (actionSheetController) -> Void in
             print("handle Logout action...")
-            
-            let firebaseAuth = FIRAuth.auth()
-            do {
-                FBSDKLoginManager().logOut()
-                try firebaseAuth?.signOut()
-                AppState.sharedInstance.signedIn = false
-            } catch let signOutError as NSError {
-                print ("Error signing out: \(signOutError)")
-            }
-            let loginViewController = self.storyboard?.instantiateViewControllerWithIdentifier("FirebaseSignInViewController") as! FirebaseSignInViewController!
-            self.navigationController?.pushViewController(loginViewController, animated: true)
+            CommonUtils.sharedUtils.showProgress(self.view, label: "Signing out..")
+            signOut({ (error) in
+                CommonUtils.sharedUtils.hideProgress()
+                if error == nil {
+                    let loginViewController = self.storyboard?.instantiateViewControllerWithIdentifier("FirebaseSignInViewController") as! FirebaseSignInViewController!
+                    self.navigationController?.pushViewController(loginViewController, animated: true)
+                } else {
+                    CommonUtils.sharedUtils.showAlert(self, title: "message", message: "Failed to signout, Error: \(error)")
+                }
+            })
         }))
-        
         presentViewController(actionSheetController, animated: true, completion: nil)
-        
     }
+}
 
+func signOut(callback:((error:NSError?)->Void)) {
+    let ref = FIRDatabase.database().reference()
+    ref.removeAllObservers()
+    
+    let firebaseAuth = FIRAuth.auth()
+    do {
+        FBSDKLoginManager().logOut()
+        try firebaseAuth?.signOut()
+        AppState.sharedInstance.signedIn = false
+        callback(error: nil)
+    } catch let signOutError as NSError {
+        print ("Error signing out: \(signOutError)")
+        callback(error: signOutError)
+    }
 }

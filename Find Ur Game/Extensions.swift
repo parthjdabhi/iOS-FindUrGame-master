@@ -152,6 +152,12 @@ extension String {
     }
 }
 
+extension Double {
+    var asDateFromMiliseconds: NSDate {
+        return NSDate.init(timeIntervalSince1970: self)
+    }
+}
+
 extension NSDate {
     
     func getElapsedInterval() -> String {
@@ -213,7 +219,20 @@ extension NSDate {
         if self.compare(dateToCompare) == NSComparisonResult.OrderedAscending {
             isLess = true
         }
+        //NSCalendar.currentCalendar().compareDate(now, toDate: olderDate,toUnitGranularity: .Day)
+        //Return Result
+        return isLess
+    }
+    
+    func isExpiredDate(dateToCompare: NSDate) -> Bool {
+        //Declare Variables
+        var isLess = false
         
+        //Compare Values
+        if NSCalendar.currentCalendar().compareDate(self, toDate: dateToCompare, toUnitGranularity: .Day) == NSComparisonResult.OrderedAscending {
+            isLess = true
+        }
+        //
         //Return Result
         return isLess
     }
@@ -246,4 +265,38 @@ extension NSDate {
         //Return Result
         return dateWithHoursAdded
     }
+}
+
+
+func compareDateWithUnit(date1: NSDate, toDate date2: NSDate, toUnitGranularity unit: NSCalendarUnit) -> NSComparisonResult {
+    let now = NSDate()
+    // "Sep 23, 2015, 10:26 AM"
+    
+    let olderDate = NSDate(timeIntervalSinceNow: -10000)
+    // "Sep 23, 2015, 7:40 AM"
+    
+    var order = NSCalendar.currentCalendar().compareDate(now, toDate: olderDate,toUnitGranularity: .Hour)
+    switch order {
+        case .OrderedDescending:
+            print("DESCENDING")
+        case .OrderedAscending:
+            print("ASCENDING")
+        case .OrderedSame:
+            print("SAME")
+    }
+    // Compare to hour: DESCENDING
+    
+    order = NSCalendar.currentCalendar().compareDate(now, toDate: olderDate,toUnitGranularity: .Day)
+    
+    switch order {
+    case .OrderedDescending:
+        print("DESCENDING")
+    case .OrderedAscending:
+        print("ASCENDING")
+    case .OrderedSame:
+        print("SAME")
+    }
+    // Compare to day: SAME
+    
+    return order
 }

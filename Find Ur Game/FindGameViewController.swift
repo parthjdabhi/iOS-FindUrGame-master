@@ -66,11 +66,22 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         
         self.cvGames.showsHorizontalScrollIndicator = false
         let layout = self.cvGames.collectionViewLayout as! PDCarouselFlowLayout
-        layout.spacingMode = PDCarouselFlowLayoutSpacingMode.overlap(visibleOffset: 100)
+        //layout.spacingMode = PDCarouselFlowLayoutSpacingMode.overlap(visibleOffset: 100)
+        layout.spacingMode = PDCarouselFlowLayoutSpacingMode.fixed(spacing: 20)
         layout.scrollDirection = .Horizontal
         
         btnCurrentLocation.setCornerRadious(btnCurrentLocation.frame.size.width/2)
         btnJoinGame.setCornerRadious(2)
+        
+//        let hLayout = PDHorizantalFlowLayout()
+//        hLayout.itemSize = CGSizeMake(50, 50)
+//        self.cvUserThisGame.collectionViewLayout = hLayout
+        
+        let hLayout = UICollectionViewFlowLayout()
+        hLayout.scrollDirection = .Horizontal
+        //hLayout.itemSize = CGSizeMake(50, 50)
+        self.cvUserThisGame.collectionViewLayout = hLayout
+        self.cvUserThisGame.showsHorizontalScrollIndicator = false
         
         self.initLocationManager()
         if CLocation.coordinate.latitude != 0 {
@@ -106,14 +117,35 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         CommonUtils.sharedUtils.showProgress(self.view, label: "Getting list of games..")
         
         dispatch_group_enter(myGroup)
-        ref.child("games").child("active").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+        
+        ref.child("games").child("active").queryOrderedByChild("activeStatus").queryEqualToValue("active")
+            .observeSingleEventOfType(.Value, withBlock: { (snapshot) -> Void in
+                //Filter Active Game Only
+        //})
+        //ref.child("games").child("active").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+                
             places.removeAll()
+            
+            print("\(NSDate().timeIntervalSince1970)")
             //self.tblGroups.reloadData()
             for child in snapshot.children {
                 
                 var placeDict = Dictionary<String,AnyObject>()
                 let childDict = child.valueInExportFormat() as! NSDictionary
                 //print(childDict)
+                
+                print(childDict.valueForKey("startTimestamp"))
+                
+                if let startTimestamp = childDict.valueForKey("startTimestamp") as? Double
+                    where startTimestamp.asDateFromMiliseconds.isExpiredDate(NSDate()) == true
+                {
+                    print("\(startTimestamp) : \(startTimestamp.asDateFromMiliseconds.formattedWith())")
+                    print("Skip this record and mark them expired : \(startTimestamp.asDateFromMiliseconds.isExpiredDate(NSDate()))")
+                    // Set to expired
+                    let StatusDict = ["activeStatus" : "expired"]
+                    self.ref.child("games").child("active").child(child.key).updateChildValues(StatusDict)
+                    continue
+                }
                 
                 //let jsonDic = NSJSONSerialization.JSONObjectWithData(childDict, options: NSJSONReadingOptions.MutableContainers, error: &error) as Dictionary<String, AnyObject>;
                 for key : AnyObject in childDict.allKeys {
@@ -246,7 +278,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         cvGames.reloadData()
     }
     
-    func ShowFilteredGamePlace()
+    func ShowFilteredGamePlace(LatLongDelta:CLLocationDegrees = 0.05)
     {
         mvLocation.removeAnnotations(mvLocation.annotations)
         
@@ -265,6 +297,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
 //        let latitude = NSString(string: filteredPlaces[activePlace]["lat"]!).doubleValue
 //        let longitude = NSString(string: filteredPlaces[activePlace]["long"]!).doubleValue
 //        let coordinate = CLLocationCoordinate2DMake(latitude, longitude)
+
         let latDelta:CLLocationDegrees = 0.05
         let lonDelta:CLLocationDegrees = 0.05
         let span:MKCoordinateSpan = MKCoordinateSpanMake(latDelta, lonDelta)
@@ -273,27 +306,52 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
     }
     
     @IBAction func findRangeChanged(sender: UISegmentedControl) {
+        
+        var LatLongDelta:CLLocationDegrees = 0.05
+        
         switch findRangeSC.selectedSegmentIndex
         {
         case 0:
             filterWithKm = 5
+            LatLongDelta = 0.05
             break
         case 1:
             filterWithKm = 10
+            LatLongDelta = 0.10
             break
         case 2:
             filterWithKm = 20
+            LatLongDelta = 0.20
             break
         case 3:
-            filterWithKm = 0
+            filterWithKm = 50
+            LatLongDelta = 0.50
             break
         default:
             filterWithKm = 0
+            LatLongDelta = 0.50
             break;
         }
         self.filterData()
         self.ShowFilteredGamePlace()
         cvGames.reloadData()
+        
+        let span:MKCoordinateSpan = MKCoordinateSpanMake(LatLongDelta, LatLongDelta)
+        let region:MKCoordinateRegion = MKCoordinateRegionMake(CLocation.coordinate, span)
+        self.mvLocation.setRegion(region, animated: true)
+        
+//        mvLocation.region = MKCoordinateRegionMakeWithDistance(
+//            CLocation.coordinate,
+//            MilesToMeters(Double(filterWithKm)),
+//            MilesToMeters(Double(filterWithKm))
+//        );
+    }
+    
+    func MilesToMeters(miles: Double) -> Double {
+        // 1 mile is 1609.344 meters
+        // source: http://www.google.com/search?q=1+mile+in+meters
+        //return 1609.344 * miles;
+        return 1000.0 * miles;
     }
     
     @IBAction func actionGetCurrentLocation(sender: AnyObject) {
@@ -317,6 +375,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         return 0
     }
     
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         if collectionView == cvGames {
@@ -336,7 +395,8 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
             
             cell.lblSport.text = game["sport"] as? String ?? ""
             cell.lblGameName.text = game["groupName"] as? String ?? ""
-            cell.lblDate.text = (game["startTimestamp"] as? String ?? "1").asDateUTC?.strDateInUTC
+            //cell.lblDate.text = (game["startTimestamp"] as? String ?? "1").asDateUTC?.strDateInUTC
+            cell.lblDate.text = (game["startTimestamp"] as? String)?.asDateFromMiliseconds?.formattedWith()
             cell.lblTime.text = game["endTimestamp"] as? String ?? ""
             //cell.lblMoreCount.text = "2+"
             
@@ -384,7 +444,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PlayerInGameCollectionViewCell.identifier, forIndexPath: indexPath) as! PlayerInGameCollectionViewCell
             
-            let game = filteredPlaces[indexPath.row]
+            let game = PlayerInGame[indexPath.row]
             print(game)
             //cell.image.layer.cornerRadius = max(cell.image.frame.size.width, cell.image.frame.size.height) / 2
             //cell.image.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.1).CGColor
@@ -431,21 +491,25 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
     }
     
     // MARK: - UIScrollViewDelegate
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        let layout = self.cvGames.collectionViewLayout as! PDCarouselFlowLayout
-        let pageSide = (layout.scrollDirection == .Horizontal) ? self.pageSize.width : self.pageSize.height
-        let offset = (layout.scrollDirection == .Horizontal) ? scrollView.contentOffset.x : scrollView.contentOffset.y
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView)
+    {
+        if scrollView == cvGames {
+            let layout = self.cvGames.collectionViewLayout as! PDCarouselFlowLayout
+            let pageSide = (layout.scrollDirection == .Horizontal) ? self.pageSize.width : self.pageSize.height
+            let offset = (layout.scrollDirection == .Horizontal) ? scrollView.contentOffset.x : scrollView.contentOffset.y
+            
+            currentPage = Int(floor((offset - pageSide / 2) / pageSide) + 1)
+            print("currentPage = \(currentPage)")
+            
+            let game = filteredPlaces[currentPage]
+            let lat = Double(game["lat"] as? String ?? "1") ?? 0
+            let long = Double(game["long"] as? String ?? "1") ?? 0
+            
+            let center = CLLocationCoordinate2D(latitude: lat, longitude: long)
+            let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
+            self.mvLocation.setRegion(region, animated: true)
+        }
         
-        currentPage = Int(floor((offset - pageSide / 2) / pageSide) + 1)
-        print("currentPage = \(currentPage)")
-        
-        let game = filteredPlaces[currentPage]
-        let lat = Double(game["lat"] as? String ?? "1") ?? 0
-        let long = Double(game["long"] as? String ?? "1") ?? 0
-        
-        let center = CLLocationCoordinate2D(latitude: lat, longitude: long)
-        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
-        self.mvLocation.setRegion(region, animated: true)
     }
     
     // MARK: - Location
@@ -588,6 +652,10 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
     
     @IBAction func joinGameButton(sender: AnyObject) {
         
+        if PlayerInGame.count >= 11 {
+            CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Ooops, it looks like eleven player is alredy joined to this game!")
+            return
+        }
         
         let timestamp = NSDate().timeIntervalSince1970
         let enrollGame:[String:AnyObject] = ["joinedAt": timestamp, "uid": myUserID!]

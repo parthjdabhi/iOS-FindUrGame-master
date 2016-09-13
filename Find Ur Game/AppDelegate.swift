@@ -49,6 +49,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         if let user = FIRAuth.auth()?.currentUser
         {
             print(user)
+            if user.providerData.count > 0
+                && user.providerData[0].providerID == "facebook.com"
+            {
+                
+                print(myUserID)
+//                FIRDatabase.database().reference().child("users").child(myUserID!).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+//                    AppState.sharedInstance.currentUser = snapshot
+//                    if let isProfileSet = snapshot.value!["isProfileSet"] as? String
+//                        where isProfileSet == "1"
+//                    {
+//                        self.navigationController?.pushViewController(MyTabBarViewController.init(), animated: true)
+//                    }
+//                    else {
+//                        print("No isProfileSet")
+//                    }
+//                    })
+//                { (error) in
+//                    print(error.localizedDescription)
+//                }
+            }
+            
 //            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
 //            let navigationController = mainStoryboard.instantiateViewControllerWithIdentifier("navHome") as? UINavigationController
 //            navigationController?.navigationBarHidden = true // or not, your choice.

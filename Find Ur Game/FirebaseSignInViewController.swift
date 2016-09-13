@@ -143,7 +143,7 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
                 let token = FBSDKAccessToken.currentAccessToken().tokenString
                 
                 let credential = FIRFacebookAuthProvider.credentialWithAccessToken(token)
-                CommonUtils.sharedUtils.showProgress(self.view, label: "Uploading Information...")
+                CommonUtils.sharedUtils.showProgress(self.view, label: "Siginin..")
                 FIRAuth.auth()?.signInWithCredential(credential, completion: { (user, error) in
                     if error != nil {
                         print(error?.localizedDescription)
@@ -185,10 +185,19 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
             } else {
                 print("fetched user: \(result)")
                 
-                let fbData:Dictionary<String, AnyObject> = ["userFirstName": result.valueForKey("first_name") as? String ?? "",
+                var fbData:Dictionary<String, AnyObject> = ["userFirstName": result.valueForKey("first_name") as? String ?? "",
                     "userLastName": result.valueForKey("last_name") as? String ?? "",
                     "gender": result.valueForKey("gender") as? String ?? "",
                     "email": result.valueForKey("email") as? String ?? ""]
+                
+                if let picture = result.objectForKey("picture") {
+                    if let pictureData = picture.objectForKey("data"){
+                        if let pictureURL = pictureData.valueForKey("url") {
+                            print(pictureURL)
+                            fbData["profilePhotoURL"] = pictureURL
+                        }
+                    }
+                }
                 
                 var data:Dictionary<String, AnyObject> = [
                     "facebookData": fbData,
@@ -198,18 +207,12 @@ class FirebaseSignInViewController: UIViewController, UITextFieldDelegate {
                 if let email = result.valueForKey("email") as? String {
                     data["email"] = email
                 }
+                
                 print("DATA TO UPDATE : \(data)")
                 
                 self.ref.child("users").child(myUserID!).updateChildValues(data)
                 
-                if let picture = result.objectForKey("picture") {
-                    if let pictureData = picture.objectForKey("data"){
-                        if let pictureURL = pictureData.valueForKey("url") {
-                            print(pictureURL)
-                            self.ref.child("users").child(myUserID!).child("facebookData").child("profilePhotoURL").setValue(pictureURL)
-                        }
-                    }
-                }
+                
                 let SignUpFBVC = self.storyboard?.instantiateViewControllerWithIdentifier("SignupFBViewController") as! SignupFBViewController!
                 self.navigationController?.pushViewController(SignUpFBVC, animated: true)
             }

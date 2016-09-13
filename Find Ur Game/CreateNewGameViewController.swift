@@ -55,7 +55,8 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
     @IBOutlet var txtTimeRange: UITextField?
     @IBOutlet var pickerTimeRange: UIPickerView! = UIPickerView()
     //let RangeArray = ["00:00", "00:00", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30"]
-    var SH = 0, SM = 0, EH = 0, EM = 0;
+    var SH = 12, SM = 0, EH = 12, EM = 0;
+    var SMT = "AM",EMT = "AM"
     
     @IBOutlet var btnCurrentLocation: UIButton!
     @IBOutlet var btnSelectLocation: UIButton!
@@ -96,7 +97,7 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
         
         txtGameName.setLeftMargin(8)
         txtDate?.setLeftMargin(8)
-        txtTimeRange?.setLeftMargin(8)
+        txtTimeRange?.setLeftMargin(6)
         txtLocation.setLeftMargin(8)
         txtLocation.text = "Select Location"
         
@@ -110,7 +111,8 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
         txtDate?.minimumDate = NSDate()
         
         txtTimeRange?.inputView = pickerTimeRange
-        txtTimeRange?.text = "00:00 - 00:00"
+        //txtTimeRange?.text = "12:00AM - 12:00AM"
+        txtTimeRange?.text = "\(String(format: "%02d:%02d\(SMT) - %02d:%02d\(EMT)", SH,SM, EH, EM))"
         pickerTimeRange.delegate = self
         pickerTimeRange.dataSource = self
         
@@ -159,7 +161,8 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
         let startTimestamp = (txtDate?.date ?? NSDate()).timeIntervalSince1970
         //let endTimestamp = (txtEndDate?.date ?? NSDate()).timeIntervalSince1970
         
-        let game:[NSObject : AnyObject] = ["locName":self.txtLocation.text!,"sport":sportAnswer, "lat": selectedLocation!.coordinate.latitude, "long": selectedLocation!.coordinate.longitude, "gameCreator": myUserID!, "skillLevel": skillAnswer, "groupName": txtGameName.text!, "gameNotes": tvDescription.text, "timestamp": timestamp, "startTimestamp": startTimestamp, "endTimestamp": txtTimeRange?.text ?? ""]
+        var game:[NSObject : AnyObject] = ["locName":self.txtLocation.text!,"sport":sportAnswer, "lat": selectedLocation!.coordinate.latitude, "long": selectedLocation!.coordinate.longitude, "gameCreator": myUserID!, "skillLevel": skillAnswer, "groupName": txtGameName.text!, "gameNotes": tvDescription.text, "timestamp": timestamp, "startTimestamp": startTimestamp, "endTimestamp": txtTimeRange?.text ?? ""]
+        game["activeStatus"] = "active"
         print(game)
         
         CommonUtils.sharedUtils.showProgress(self.view, label: "Loading..")
@@ -248,11 +251,16 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
     
     // returns the # of rows in each component..
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int{
-        return (component == 0 || component == 2) ? 24 : 12
+        return (component == 0 || component == 2) ? 24 : 60
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return "\(String(format: "%02d", ((component == 0 || component == 2) ? row : row*5)))"
+        if (component == 0 || component == 2) {
+            return "\(String(format: "%02d", (row%12 == 0) ? 12 : row%12 ))"
+        } else if (component == 1 || component == 3) {
+            return "\(String(format: "%02d", row))"
+        }
+        return ""
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
@@ -261,17 +269,19 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
         //pickerBizCat.hidden = true;
         switch component {
         case 0:
-            SH = row
+            SH = (((row % 12) == 0) ? 12 : (row % 12))
+            SMT = (row <= 11) ? "AM" : "PM"
         case 1:
-            SM = row*5
-        case 2:
-            EH = row
+            SM = row
         case 3:
-            SM = row*5
+            EH = (((row % 12) == 0) ? 12 : (row % 12))
+            SMT = (row <= 11) ? "AM" : "PM"
+        case 4:
+            SM = row
         default:
             print(component)
         }
-        txtTimeRange?.text = "\(String(format: "%02d:%02d - %02d:%02d", SH,SM, EH, EM))"
+        txtTimeRange?.text = "\(String(format: "%02d:%02d\(SMT) - %02d:%02d\(EMT)", SH,SM, EH, EM))"
     }
     
     // MARK: - IQDropDownTextFieldDelegate Methods

@@ -330,8 +330,8 @@ class SignupFBViewController: UIViewController, UITextFieldDelegate, UIPickerVie
         // make sure the user entered both email & password
         //Validate email,password,name,height,weight
         
-        if firstNameField.text == "" || firstNameField.text?.characters.count <= 4 ||
-            lastNameField.text == "" || lastNameField.text?.characters.count <= 4
+        if firstNameField.text == "" || firstNameField.text?.characters.count < 3 ||
+            lastNameField.text == "" || lastNameField.text?.characters.count < 3
         {
             CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Required you name!")
             return

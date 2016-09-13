@@ -14,7 +14,6 @@ public enum PDCarouselFlowLayoutSpacingMode {
     case overlap(visibleOffset: CGFloat)
 }
 
-
 public class PDCarouselFlowLayout: UICollectionViewFlowLayout {
     
     private struct LayoutState {
