@@ -153,7 +153,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
                 {
                     //print(players.keys)
                     print(players.keys.count)
-                    if players.keys.count >= 11 {
+                    if players.keys.count >= 11 && players.keys.contains(myUserID!) == false {
                         print("Hide This Game : \(child.key ?? "")")
                         continue
                     }
