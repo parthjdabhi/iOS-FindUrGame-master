@@ -23,6 +23,7 @@
 		5E654A181D803EAB00516C1D /* GameNearMeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E654A171D803EAB00516C1D /* GameNearMeCollectionViewCell.swift */; };
 		5E654A1A1D803ED300516C1D /* PDCarouselFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E654A191D803ED300516C1D /* PDCarouselFlowLayout.swift */; };
 		5E9A86291D6DD553004B50C1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E9A86271D6DD553004B50C1 /* Main.storyboard */; };
+		5E9E45E11D8C088700A63CD0 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9E45E01D8C088700A63CD0 /* EditProfileViewController.swift */; };
 		5EBEE2921D6D8404005FDB2C /* SelectLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBEE2911D6D8404005FDB2C /* SelectLocationViewController.swift */; };
 		5EBEE2941D6DA6E5005FDB2C /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EBEE2931D6DA6E5005FDB2C /* Storyboard.storyboard */; };
 		5EC062341D6C20810063AA5E /* GameTableviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC062331D6C20810063AA5E /* GameTableviewCell.swift */; };
@@ -100,6 +101,7 @@
 		5E654A171D803EAB00516C1D /* GameNearMeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameNearMeCollectionViewCell.swift; sourceTree = "<group>"; };
 		5E654A191D803ED300516C1D /* PDCarouselFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDCarouselFlowLayout.swift; sourceTree = "<group>"; };
 		5E9A86281D6DD553004B50C1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5E9E45E01D8C088700A63CD0 /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		5EBEE2911D6D8404005FDB2C /* SelectLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectLocationViewController.swift; sourceTree = "<group>"; };
 		5EBEE2931D6DA6E5005FDB2C /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		5EC0622E1D6C05F30063AA5E /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Bridging-Header.h"; path = "Find Ur Game/Bridging-Header.h"; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				5EBEE2911D6D8404005FDB2C /* SelectLocationViewController.swift */,
 				DA8BEC1F1D67991300C8E142 /* GameScheduleViewController.swift */,
 				DA8BEC211D67993800C8E142 /* ProfileViewController.swift */,
+				5E9E45E01D8C088700A63CD0 /* EditProfileViewController.swift */,
 				5EED81A31D7DA0D70000EAD9 /* Tab Bar VCs */,
 			);
 			name = "Main screens";
@@ -546,6 +549,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E9E45E11D8C088700A63CD0 /* EditProfileViewController.swift in Sources */,
 				DA8B4B8F1D57D73300F56470 /* ViewController.swift in Sources */,
 				DA8B4BDC1D57DD6300F56470 /* AEXML.swift in Sources */,
 				DA8B4BDB1D57DD6300F56470 /* TextField.swift in Sources */,

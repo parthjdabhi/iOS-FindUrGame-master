@@ -27,6 +27,7 @@ struct Constants {
 
 let sportArray = ["Basketball", "Baseball", "Soccer", "Volleyball"]
 let skillsArray = ["No Experience", "Recreational", "High School", "College", "Pro"]
+let txtPlaceHAboutMe = "Tell us something about yourself.."
 
 let clrGreen = UIColor.init(rgb: 0x1abc9c)
 let clrBlackSelected = UIColor.init(rgb: 0x222831)

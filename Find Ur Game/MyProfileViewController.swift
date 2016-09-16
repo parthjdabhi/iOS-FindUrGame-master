@@ -17,6 +17,7 @@ class MyProfileViewController: UIViewController {
 
     @IBOutlet var lblName: UILabel!
     @IBOutlet var lblBodyDetails: UILabel!
+    @IBOutlet var lblAboutMe: UILabel!
     @IBOutlet var imgProfile: UIImageView!
     
     @IBOutlet var vBasketball: UIView!
@@ -60,10 +61,35 @@ class MyProfileViewController: UIViewController {
         
         self.lblName.text = " - "
         self.lblBodyDetails.text = " - "
+        self.lblAboutMe.text = " - "
         
         print(myUserID)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        loadProfileData()
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+    
+    func loadProfileData() {
+        CommonUtils.sharedUtils.showProgress(self.view, label:"Loading..")
         ref.child("users").child(myUserID!).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
-            
+            CommonUtils.sharedUtils.hideProgress()
             if let isProfileSet = snapshot.value!["isProfileSet"] as? String?
                 where isProfileSet == nil
             {
@@ -92,13 +118,21 @@ class MyProfileViewController: UIViewController {
             self.lblSkillVoleyball.text = snapshot.value!["volleyball"] as? String ?? "-"
             
             self.lblName.text = userFirstName + " " + userLastName
-            self.lblBodyDetails.text = "\(userWeight) W  -  \(userHeight) H"
+            self.lblBodyDetails.text = "\(userWeight) lbs  -  \(userHeight) H"
             
-            if let userSport = snapshot.value!["userSport"] as? String {
-                if self.sportArray.contains(userSport) {
-                    //self.SportAction(((userSport == self.sportArray[0]) ? self.btnBasketball : ((userSport == self.sportArray[1]) ? self.btnBaseball : ((userSport == self.sportArray[2]) ? self.btnSoccer : self.btnVoleyball))))
-                }
+            if let aboutMe = snapshot.value!["aboutMe"] as? String {
+                self.lblAboutMe.text =  aboutMe
+                self.lblAboutMe.textColor = UIColor.blackColor()
+            } else {
+                self.lblAboutMe.text = txtPlaceHAboutMe
+                self.lblAboutMe.textColor = UIColor.lightGrayColor()
             }
+            
+            //            if let userSport = snapshot.value!["userSport"] as? String {
+            //                if self.sportArray.contains(userSport) {
+            //                    //self.SportAction(((userSport == self.sportArray[0]) ? self.btnBasketball : ((userSport == self.sportArray[1]) ? self.btnBaseball : ((userSport == self.sportArray[2]) ? self.btnSoccer : self.btnVoleyball))))
+            //                }
+            //            }
             
             if let userProfile = snapshot.value!["userProfile"] as? String {
                 let userProfileNSURL = NSURL(string: "\(userProfile)")
@@ -113,27 +147,11 @@ class MyProfileViewController: UIViewController {
             else {
                 print("No Profile Picture")
             }
-        })
+            })
         { (error) in
             print(error.localizedDescription)
         }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     @IBAction func SportAction(sender: UIButton) {
 //        vBasketball.backgroundColor = UIColor.whiteColor()
@@ -182,6 +200,12 @@ class MyProfileViewController: UIViewController {
             })
         }))
         presentViewController(actionSheetController, animated: true, completion: nil)
+    }
+    
+    @IBAction func actionEditProfile(sender: AnyObject)
+    {
+        let EditProfileVC = self.storyboard?.instantiateViewControllerWithIdentifier("EditProfileViewController") as! EditProfileViewController
+        self.navigationController?.pushViewController(EditProfileVC, animated: true)
     }
 }
 

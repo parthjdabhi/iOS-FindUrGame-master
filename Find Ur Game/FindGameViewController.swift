@@ -147,6 +147,18 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
                     continue
                 }
                 
+                // Hide game which already have 11 or more player
+                if let players = childDict["players"] as? Dictionary<String,AnyObject>
+                    //where players.convertToDictionary() != nil
+                {
+                    //print(players.keys)
+                    print(players.keys.count)
+                    if players.keys.count >= 11 {
+                        print("Hide This Game : \(child.key ?? "")")
+                        continue
+                    }
+                }
+                
                 //let jsonDic = NSJSONSerialization.JSONObjectWithData(childDict, options: NSJSONReadingOptions.MutableContainers, error: &error) as Dictionary<String, AnyObject>;
                 for key : AnyObject in childDict.allKeys {
                     let stringKey = key as! String
