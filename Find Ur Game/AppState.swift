@@ -44,4 +44,4 @@ let storageRef = storage.reference()
 //    meta.contentType = "image/jpeg"
 //    return meta
 //}()
-        
+
