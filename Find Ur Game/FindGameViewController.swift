@@ -45,6 +45,7 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
     var isRefreshingData = false
     var filterWithKm = 20
     var PlayerInGame:Array<String> = []
+    var noOfPlayerInGame = 11
     
     private var currentPage: Int = 1
     private var pageSize: CGSize {
@@ -152,8 +153,11 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
                     //where players.convertToDictionary() != nil
                 {
                     //print(players.keys)
-                    print(players.keys.count)
-                    if players.keys.count >= 11 && players.keys.contains(myUserID!) == false {
+                    let noOfPlayer = Int(players["noOfPlayer"] as? String ?? "11")
+                    
+                    print(" Max player : ", noOfPlayer," Player Joined : ", players.keys.count)
+                    
+                    if players.keys.count >= noOfPlayer && players.keys.contains(myUserID!) == false {
                         print("Hide This Game : \(child.key ?? "")")
                         continue
                     }
@@ -643,6 +647,9 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
         if let players = game["players"] as? Dictionary<String,AnyObject>
             //where players.convertToDictionary() != nil
         {
+            let noOfPlayerInGame = Int(players["noOfPlayer"] as? String ?? "11")
+            print(" Max player : ", noOfPlayerInGame," Player Joined : ", players.keys.count)
+            
             //let playersDict = players.convertToDictionary()!
             if let joinData = players[myUserID!] {
                 print(joinData)
@@ -658,13 +665,14 @@ class FindGameViewController: UIViewController, CLLocationManagerDelegate, MKMap
                 PlayerInGame.append(key)
             }
             print(PlayerInGame)
+            
             self.cvUserThisGame.reloadData()
         }
     }
     
     @IBAction func joinGameButton(sender: AnyObject) {
         
-        if PlayerInGame.count >= 11 {
+        if PlayerInGame.count >= noOfPlayerInGame {
             CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Ooops, it looks like eleven player is alredy joined to this game!")
             return
         }

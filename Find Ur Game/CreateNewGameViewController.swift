@@ -51,6 +51,7 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
     @IBOutlet var btnExpCollege: UIButton!
     @IBOutlet var btnExpPro: UIButton!
     
+    @IBOutlet var txtNoOfPlayer: UITextField!
     @IBOutlet var txtDate: IQDropDownTextField?
     @IBOutlet var txtTimeRange: UITextField?
     @IBOutlet var pickerTimeRange: UIPickerView! = UIPickerView()
@@ -95,7 +96,14 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
         
         btnCreateGame.setCornerRadious(4)
         
+        txtGameName.setCornerRadious(4)
+        txtNoOfPlayer.setCornerRadious(4)
+        txtDate?.setCornerRadious(4)
+        txtTimeRange?.setCornerRadious(4)
+        txtLocation.setCornerRadious(4)
+        
         txtGameName.setLeftMargin(8)
+        txtNoOfPlayer.setLeftMargin(8)
         txtDate?.setLeftMargin(8)
         txtTimeRange?.setLeftMargin(6)
         txtLocation.setLeftMargin(8)
@@ -152,6 +160,10 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
             CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "Please some game description!")
             return
         }
+        else if Int(txtNoOfPlayer.text ?? "11") < 4 {
+            CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "There should be minimum 4 player that can join your game!")
+            return
+        }
 //        else if txtEndDate!.date > txtStartDate!.date {
 //            CommonUtils.sharedUtils.showAlert(self, title: "Message", message: "invalid end date!")
 //            return
@@ -161,7 +173,7 @@ class CreateNewGameViewController: UIViewController, UIPickerViewDelegate, UIPic
         let startTimestamp = (txtDate?.date ?? NSDate()).timeIntervalSince1970
         //let endTimestamp = (txtEndDate?.date ?? NSDate()).timeIntervalSince1970
         
-        var game:[NSObject : AnyObject] = ["locName":self.txtLocation.text!,"sport":sportAnswer, "lat": selectedLocation!.coordinate.latitude, "long": selectedLocation!.coordinate.longitude, "gameCreator": myUserID!, "skillLevel": skillAnswer, "groupName": txtGameName.text!, "gameNotes": tvDescription.text, "timestamp": timestamp, "startTimestamp": startTimestamp, "endTimestamp": txtTimeRange?.text ?? ""]
+        var game:[NSObject : AnyObject] = ["locName":self.txtLocation.text!,"sport":sportAnswer, "lat": selectedLocation!.coordinate.latitude, "long": selectedLocation!.coordinate.longitude, "gameCreator": myUserID!, "skillLevel": skillAnswer, "groupName": txtGameName.text!, "gameNotes": tvDescription.text,"noOfPlayer": (txtNoOfPlayer.text ?? "11"), "timestamp": timestamp, "startTimestamp": startTimestamp, "endTimestamp": txtTimeRange?.text ?? ""]
         game["activeStatus"] = "active"
         print(game)
         

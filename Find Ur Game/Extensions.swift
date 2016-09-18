@@ -64,6 +64,41 @@ extension UITextField {
     }
 }
 
+private var maxLengths = [UITextField: Int]()
+
+extension UITextField {
+    @IBInspectable var maxLength: Int {
+        get {
+            guard let length = maxLengths[self] else {
+                return Int.max
+            }
+            return length
+        }
+        set {
+            maxLengths[self] = newValue
+            addTarget(
+                self,
+                action: #selector(limitLength),
+                forControlEvents: UIControlEvents.EditingChanged
+            )
+        }
+    }
+    
+    func limitLength(textField: UITextField) {
+        guard let prospectiveText = textField.text
+            where prospectiveText.characters.count > maxLength else {
+                return
+        }
+        
+        let selection = selectedTextRange
+        text = prospectiveText.substringWithRange(
+            Range<String.Index>(prospectiveText.startIndex ..< prospectiveText.startIndex.advancedBy(maxLength))
+        )
+        selectedTextRange = selection
+    }
+    
+}
+
 extension UIButton {
     
     func alignImageAndTitleVertically(padding: CGFloat = 6.0) {
