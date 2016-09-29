@@ -146,7 +146,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-        applicationHandleOpenURL(url)
+        //applicationHandleOpenURL(url)
         return FBSDKApplicationDelegate.sharedInstance().application(
             app,
             openURL: url,

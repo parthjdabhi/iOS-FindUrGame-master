@@ -106,7 +106,7 @@
                   moduleName = "Find Ur Game"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/iparth/Desktop/iWork/Dustin%20Allen%20-%20Harloch/5%20Find-Ur-Game/24Aug%2011am%20Starts%20from/iOS-FindUrGame-master/Find%20Ur%20Game/FirebaseSignInViewController.swift"
-                  timestampString = "495900701.477627"
+                  timestampString = "496840144.833788"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "158"
@@ -121,7 +121,7 @@
                   moduleName = "Find Ur Game"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/iparth/Desktop/iWork/Dustin%20Allen%20-%20Harloch/5%20Find-Ur-Game/24Aug%2011am%20Starts%20from/iOS-FindUrGame-master/Find%20Ur%20Game/FirebaseSignInViewController.swift"
-                  timestampString = "495900701.477933"
+                  timestampString = "496840144.833961"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "158"
@@ -154,7 +154,7 @@
                   moduleName = "Find Ur Game"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/iparth/Desktop/iWork/Dustin%20Allen%20-%20Harloch/5%20Find-Ur-Game/24Aug%2011am%20Starts%20from/iOS-FindUrGame-master/Find%20Ur%20Game/FirebaseSignInViewController.swift"
-                  timestampString = "495900701.47992"
+                  timestampString = "496840144.836764"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "156"
@@ -169,7 +169,7 @@
                   moduleName = "Find Ur Game"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/iparth/Desktop/iWork/Dustin%20Allen%20-%20Harloch/5%20Find-Ur-Game/24Aug%2011am%20Starts%20from/iOS-FindUrGame-master/Find%20Ur%20Game/FirebaseSignInViewController.swift"
-                  timestampString = "495900701.480119"
+                  timestampString = "496840144.836919"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "157"
@@ -362,7 +362,7 @@
                   moduleName = "Find Ur Game"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/iparth/Desktop/iWork/Dustin%20Allen%20-%20Harloch/5%20Find-Ur-Game/24Aug%2011am%20Starts%20from/iOS-FindUrGame-master/Find%20Ur%20Game/EditProfileViewController.swift"
-                  timestampString = "495900701.488383"
+                  timestampString = "496840144.900004"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "436"
@@ -377,7 +377,7 @@
                   moduleName = "Find Ur Game"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/iparth/Desktop/iWork/Dustin%20Allen%20-%20Harloch/5%20Find-Ur-Game/24Aug%2011am%20Starts%20from/iOS-FindUrGame-master/Find%20Ur%20Game/EditProfileViewController.swift"
-                  timestampString = "495900701.488634"
+                  timestampString = "496840144.90022"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "437"
@@ -400,6 +400,38 @@
             startingLineNumber = "438"
             endingLineNumber = "438"
             landmarkName = "saveProfile(_:imgPath:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Find Ur Game/AppDelegate.swift"
+            timestampString = "496840021.454913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
+            landmarkName = "application(_:openURL:options:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Find Ur Game/AppDelegate.swift"
+            timestampString = "496840022.467396"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
+            landmarkName = "application(_:openURL:sourceApplication:annotation:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
